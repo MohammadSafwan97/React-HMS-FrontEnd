@@ -24,8 +24,8 @@ const navItems = [
   { path: '/attendance', icon: Clock, label: 'Attendance' },
   { path: '/transfer-cases', icon: FileText, label: 'Transfer Cases' },
   
-  { path: '/pal-management', icon: FileCheck, label: 'PAL Management' },
-  { path: '/pao-management', icon: FileSpreadsheet, label: 'PAO Management' },
+  
+  { path: '/pao-management', icon: FileSpreadsheet, label: 'PAL / PAO Management' },
   { path: '/ndc-noc-records', icon: Shield, label: 'NDC / NOC Records' },
   { path: '/estate-agents', icon: Briefcase, label: 'Estate Agents' },
   

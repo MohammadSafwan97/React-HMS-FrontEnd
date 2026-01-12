@@ -7,7 +7,7 @@ import { MainDashboard } from './components/MainDashboard';
 import { TransferCases } from './components/TransferCases';
 import { AnchorageKarachiGallery } from './components/AnchorageKarachiGallery';
 import { PALManagement } from './components/PALManagement';
-import { PAOManagement } from './components/PAOManagement';
+import {PAOPALManagement} from './components/PAOPALManagement';
 import { NDCNOCRecords } from './components/NDCNOCRecords';
 import { EstateAgents } from './components/EstateAgents';
 import { Employees } from './components/Employees';
@@ -59,7 +59,7 @@ export default function App() {
           <Route path="transfer-cases" element={<TransferCases />} />
           <Route path="property-records" element={<AnchorageKarachiGallery />} />
           <Route path="pal-management" element={<PALManagement />} />
-          <Route path="pao-management" element={<PAOManagement />} />
+          <Route path="pao-management" element={<PAOPALManagement />} />
           <Route path="ndc-noc-records" element={<NDCNOCRecords />} />
           <Route path="estate-agents" element={<EstateAgents />} />
           <Route path="employees" element={<Employees />} />
