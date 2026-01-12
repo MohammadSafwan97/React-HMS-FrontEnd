@@ -177,7 +177,6 @@ export function PAOPALManagement() {
   /* ---------------- SUMMARY ---------------- */
 
   const activeRows = category === 'PAL' ? filteredPALs : filteredPAOs;
-
   const total = activeRows.length;
 
   // PAL stats
@@ -248,10 +247,15 @@ export function PAOPALManagement() {
             {category === 'PAL' ? 'PAL Management' : 'PAO Management'}
           </h1>
           <p className="text-slate-600">
-            {category === 'PAL'
-              ? <>Total PALs: <strong>{pals.length}</strong></>
-              : <>Total PAOs: <strong>{paos.length}</strong></>
-            }
+            {category === 'PAL' ? (
+              <>
+                Total PALs: <strong>{pals.length}</strong>
+              </>
+            ) : (
+              <>
+                Total PAOs: <strong>{paos.length}</strong>
+              </>
+            )}
           </p>
         </div>
 
@@ -259,7 +263,10 @@ export function PAOPALManagement() {
           {/* Category Toggle */}
           <div className="flex items-center bg-white border rounded-lg overflow-hidden">
             <button
-              onClick={() => { setCategory('PAL'); resetFilters(); }}
+              onClick={() => {
+                setCategory('PAL');
+                resetFilters();
+              }}
               className={`px-4 py-2 text-sm ${
                 category === 'PAL'
                   ? 'bg-blue-900 text-white'
@@ -269,7 +276,10 @@ export function PAOPALManagement() {
               PAL
             </button>
             <button
-              onClick={() => { setCategory('PAO'); resetFilters(); }}
+              onClick={() => {
+                setCategory('PAO');
+                resetFilters();
+              }}
               className={`px-4 py-2 text-sm ${
                 category === 'PAO'
                   ? 'bg-blue-900 text-white'
@@ -363,41 +373,29 @@ export function PAOPALManagement() {
 
       {/* TABLE */}
       <div className="bg-white border rounded-xl overflow-hidden">
-        <table className="w-full">
+        <table className="w-full table-fixed">
           <thead className="bg-slate-50 border-b">
             <tr>
               {category === 'PAL' ? (
                 <>
-                  {[
-                    'PAL Number',
-                    'Case ID',
-                    'Applicant',
-                    'Location',
-                    'Issue Date',
-                    'Status',
-                    'Actions',
-                  ].map(h => (
-                    <th key={h} className="px-6 py-4 text-left text-slate-700">
-                      {h}
-                    </th>
-                  ))}
+                  <th className="px-6 py-4 text-left text-slate-700 w-[18%]">PAL Number</th>
+                  <th className="px-6 py-4 text-left text-slate-700 w-[14%]">Case ID</th>
+                  <th className="px-6 py-4 text-left text-slate-700 w-[16%]">Applicant</th>
+                  <th className="px-6 py-4 text-left text-slate-700 w-[16%]">Location</th>
+                  <th className="px-6 py-4 text-left text-slate-700 w-[14%]">Issue Date</th>
+                  <th className="px-6 py-4 text-left text-slate-700 w-[12%]">Status</th>
+                  <th className="px-6 py-4 text-left text-slate-700 w-[10%]">Actions</th>
                 </>
               ) : (
                 <>
-                  {[
-                    'PAO Number',
-                    'Related Case ID',
-                    'Associated PAL',
-                    'Applicant Name',
-                    'Property Location',
-                    'Issue Date',
-                    'Status',
-                    'Actions',
-                  ].map(h => (
-                    <th key={h} className="px-6 py-4 text-left text-slate-700">
-                      {h}
-                    </th>
-                  ))}
+                  <th className="px-6 py-4 text-left text-slate-700">PAO Number</th>
+                  <th className="px-6 py-4 text-left text-slate-700">Related Case ID</th>
+                  <th className="px-6 py-4 text-left text-slate-700">Associated PAL</th>
+                  <th className="px-6 py-4 text-left text-slate-700">Applicant Name</th>
+                  <th className="px-6 py-4 text-left text-slate-700">Property Location</th>
+                  <th className="px-6 py-4 text-left text-slate-700">Issue Date</th>
+                  <th className="px-6 py-4 text-left text-slate-700">Status</th>
+                  <th className="px-6 py-4 text-left text-slate-700">Actions</th>
                 </>
               )}
             </tr>
@@ -407,23 +405,31 @@ export function PAOPALManagement() {
             {category === 'PAL'
               ? filteredPALs.map(pal => (
                   <tr key={pal.id} className="border-b hover:bg-slate-50">
-                    <td className="px-6 py-4 flex items-center gap-2">
-                      <FileCheck className="w-4 h-4 text-teal-600" />
-                      {pal.palNumber}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <FileCheck className="w-4 h-4 text-teal-600 shrink-0" />
+                        <span className="text-slate-900">{pal.palNumber}</span>
+                      </div>
                     </td>
-                    <td className="px-6 py-4">{pal.caseId}</td>
-                    <td className="px-6 py-4">{pal.applicantName}</td>
-                    <td className="px-6 py-4 flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-slate-400" />
-                      {pal.propertyLocation}
+                    <td className="px-6 py-4 text-slate-900">{pal.caseId}</td>
+                    <td className="px-6 py-4 text-slate-900">{pal.applicantName}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2 text-slate-900">
+                        <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                        {pal.propertyLocation}
+                      </div>
                     </td>
-                    <td className="px-6 py-4 flex items-center gap-2 text-sm">
-                      <Calendar className="w-4 h-4 text-slate-400" />
-                      {pal.issueDate}
+                    {/* ✅ FIX: Issue Date stays under Issue Date column */}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2 text-slate-900 text-sm">
+                        <Calendar className="w-4 h-4 text-slate-400 shrink-0" />
+                        {pal.issueDate}
+                      </div>
                     </td>
+                    {/* ✅ FIX: Status stays under Status column */}
                     <td className="px-6 py-4">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs ${
+                        className={`inline-flex px-3 py-1 rounded-full text-xs ${
                           pal.status === 'Issued'
                             ? 'bg-teal-50 text-teal-700'
                             : 'bg-amber-50 text-amber-700'
@@ -432,6 +438,7 @@ export function PAOPALManagement() {
                         {pal.status}
                       </span>
                     </td>
+                    {/* ✅ FIX: View button stays under Actions */}
                     <td className="px-6 py-4">
                       <button
                         onClick={() => setSelectedPAL(pal)}
@@ -443,7 +450,10 @@ export function PAOPALManagement() {
                   </tr>
                 ))
               : filteredPAOs.map(pao => (
-                  <tr key={pao.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                  <tr
+                    key={pao.id}
+                    className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
+                  >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <FileSpreadsheet className="w-4 h-4 text-indigo-600" />
@@ -494,10 +504,7 @@ export function PAOPALManagement() {
 
       {/* REPORT MODAL */}
       {showReport && (
-        <Modal
-          title={`${category} Report`}
-          onClose={() => setShowReport(false)}
-        >
+        <Modal title={`${category} Report`} onClose={() => setShowReport(false)}>
           {category === 'PAL' ? (
             <>
               <div className="grid grid-cols-3 gap-4 mb-4">
@@ -598,11 +605,32 @@ export function PAOPALManagement() {
       {/* ADD PAL MODAL */}
       {showAddPALModal && (
         <Modal title="Add New PAL" onClose={() => setShowAddPALModal(false)}>
-          <Input label="PAL Number" value={palFormData.palNumber} onChange={v => handlePALChange('palNumber', v)} />
-          <Input label="Case ID" value={palFormData.caseId} onChange={v => handlePALChange('caseId', v)} />
-          <Input label="Applicant Name" value={palFormData.applicantName} onChange={v => handlePALChange('applicantName', v)} />
-          <Input label="Property Location" value={palFormData.propertyLocation} onChange={v => handlePALChange('propertyLocation', v)} />
-          <Input type="date" label="Issue Date" value={palFormData.issueDate} onChange={v => handlePALChange('issueDate', v)} />
+          <Input
+            label="PAL Number"
+            value={palFormData.palNumber}
+            onChange={v => handlePALChange('palNumber', v)}
+          />
+          <Input
+            label="Case ID"
+            value={palFormData.caseId}
+            onChange={v => handlePALChange('caseId', v)}
+          />
+          <Input
+            label="Applicant Name"
+            value={palFormData.applicantName}
+            onChange={v => handlePALChange('applicantName', v)}
+          />
+          <Input
+            label="Property Location"
+            value={palFormData.propertyLocation}
+            onChange={v => handlePALChange('propertyLocation', v)}
+          />
+          <Input
+            type="date"
+            label="Issue Date"
+            value={palFormData.issueDate}
+            onChange={v => handlePALChange('issueDate', v)}
+          />
 
           <select
             value={palFormData.status}
@@ -614,10 +642,16 @@ export function PAOPALManagement() {
           </select>
 
           <div className="flex justify-end gap-3 mt-4">
-            <button onClick={() => setShowAddPALModal(false)} className="px-4 py-2 border rounded-lg">
+            <button
+              onClick={() => setShowAddPALModal(false)}
+              className="px-4 py-2 border rounded-lg"
+            >
               Cancel
             </button>
-            <button onClick={savePAL} className="px-4 py-2 bg-blue-900 text-white rounded-lg">
+            <button
+              onClick={savePAL}
+              className="px-4 py-2 bg-blue-900 text-white rounded-lg"
+            >
               Save PAL
             </button>
           </div>
@@ -627,12 +661,37 @@ export function PAOPALManagement() {
       {/* ADD PAO MODAL */}
       {showAddPAOModal && (
         <Modal title="Issue New PAO" onClose={() => setShowAddPAOModal(false)}>
-          <Input label="PAO Number" value={paoFormData.paoNumber} onChange={v => handlePAOChange('paoNumber', v)} />
-          <Input label="Related Transfer Case" value={paoFormData.caseId} onChange={v => handlePAOChange('caseId', v)} />
-          <Input label="Associated PAL" value={paoFormData.relatedPAL} onChange={v => handlePAOChange('relatedPAL', v)} />
-          <Input label="Applicant Name" value={paoFormData.applicantName} onChange={v => handlePAOChange('applicantName', v)} />
-          <Input label="Property Location" value={paoFormData.propertyLocation} onChange={v => handlePAOChange('propertyLocation', v)} />
-          <Input type="date" label="Issue Date" value={paoFormData.issueDate} onChange={v => handlePAOChange('issueDate', v)} />
+          <Input
+            label="PAO Number"
+            value={paoFormData.paoNumber}
+            onChange={v => handlePAOChange('paoNumber', v)}
+          />
+          <Input
+            label="Related Transfer Case"
+            value={paoFormData.caseId}
+            onChange={v => handlePAOChange('caseId', v)}
+          />
+          <Input
+            label="Associated PAL"
+            value={paoFormData.relatedPAL}
+            onChange={v => handlePAOChange('relatedPAL', v)}
+          />
+          <Input
+            label="Applicant Name"
+            value={paoFormData.applicantName}
+            onChange={v => handlePAOChange('applicantName', v)}
+          />
+          <Input
+            label="Property Location"
+            value={paoFormData.propertyLocation}
+            onChange={v => handlePAOChange('propertyLocation', v)}
+          />
+          <Input
+            type="date"
+            label="Issue Date"
+            value={paoFormData.issueDate}
+            onChange={v => handlePAOChange('issueDate', v)}
+          />
 
           <select
             value={paoFormData.status}
@@ -649,17 +708,23 @@ export function PAOPALManagement() {
             <textarea
               rows={3}
               value={paoFormData.approvalNotes}
-              onChange={(e) => handlePAOChange('approvalNotes', e.target.value)}
+              onChange={e => handlePAOChange('approvalNotes', e.target.value)}
               className="w-full mt-1 border rounded-lg px-3 py-2"
               placeholder="Enter approval notes and conditions..."
             />
           </div>
 
           <div className="flex justify-end gap-3 mt-4">
-            <button onClick={() => setShowAddPAOModal(false)} className="px-4 py-2 border rounded-lg">
+            <button
+              onClick={() => setShowAddPAOModal(false)}
+              className="px-4 py-2 border rounded-lg"
+            >
               Cancel
             </button>
-            <button onClick={savePAO} className="px-4 py-2 bg-gradient-to-r from-blue-900 to-teal-700 text-white rounded-lg">
+            <button
+              onClick={savePAO}
+              className="px-4 py-2 bg-gradient-to-r from-blue-900 to-teal-700 text-white rounded-lg"
+            >
               Issue PAO
             </button>
           </div>
