@@ -2,16 +2,17 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router';
 
 import { LoginPage } from './components/LoginPage';
-import { DashboardLayout } from './components/DashboardLayout';
-import { MainDashboard } from './components/MainDashboard';
-import { TransferCases } from './components/TransferCases';
+import { DashboardLayout } from './components/SideDashboardLayout/DashboardLayout';
+import {ProjectDirectorDashboard} from './Pages/ProjectDirector/ProjectDirectorDashboard';
+import { MainDashboard } from './components/MainDashboardPage/MainDashboard';
+import { TransferCases } from './components/TransferCasePage/TransferCases';
 import { AnchorageKarachiGallery } from './components/AnchorageKarachiGallery';
 import { PALManagement } from './components/PALManagement';
 import {PAOPALManagement} from './components/PAOPALManagement';
 import { NDCNOCRecords } from './components/NDCNOCRecords';
 import { EstateAgents } from './components/EstateAgents';
-import { Employees } from './components/Employees';
-import { Attendance } from './components/Attendance';
+import { Employees } from './Pages/EmployeesPage/Employees';
+import { Attendance } from './Pages/AttendancePage/Attendance';
 import { ConstructionProjects } from './components/ConstructionProjects';
 import { Reports } from './components/Reports';
 import { Chatbot } from './components/Chatbot';
@@ -67,6 +68,7 @@ export default function App() {
           <Route path="construction-projects" element={<ConstructionProjects />} />
           <Route path="reports" element={<Reports />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="project-director" element={<ProjectDirectorDashboard/>}/>
           <Route path="chatbot" element={<Chatbot />} />
         </Route>
       </Routes>

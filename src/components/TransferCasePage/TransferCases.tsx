@@ -4,6 +4,7 @@ import { Plus, Eye, Edit } from 'lucide-react';
 /* ---------------- CONSTANTS ---------------- */
 
 const EXECUTION_TYPES = ['Full', 'Partial'];
+const CATEGORIES = ['Service', 'Bl','Gift','Death Case','Installment'];
 const LOCATIONS = ['Karachi', 'Islamabad', 'Gwadar', 'PN Farms'];
 const STATUSES = ['Forwarded', 'Action Awaited'];
 
@@ -298,7 +299,13 @@ export function TransferCases() {
   onChange={v => handleChange('inwardDate', v)}
 />
               
-
+                 <SelectField
+                label="Category"
+                value={selectedCase.executionType}
+                options={CATEGORIES}
+                disabled={mode === 'view'}
+                onChange={v => handleChange('executionType', v)}
+              />
               <Input label="Registration No" value={selectedCase.fileNo} disabled={mode === 'view'}
                 onChange={v => handleChange('fileNo', v)} />
 
@@ -324,6 +331,7 @@ export function TransferCases() {
                 disabled={mode === 'view'}
                 onChange={v => handleChange('executionType', v)}
               />
+             
 
               <SelectField
                 label="Location"

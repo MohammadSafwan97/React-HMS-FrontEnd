@@ -1,5 +1,5 @@
 import { Outlet, NavLink } from 'react-router';
-import logo from '../assets/anchorageKarachi.jpg';
+import logo from '../../assets/anchorageKarachi.jpg';
 import {
   LayoutDashboard,
   FileText,
@@ -35,6 +35,7 @@ const navItems = [
   { path: '/reports', icon: BarChart3, label: 'Reports' },
   { path: '/settings', icon: SettingsIcon, label: 'Settings' },
   { path: '/chatbot', icon: SettingsIcon, label: 'Help' },
+  { path: '/project-director', icon: SettingsIcon, label: 'Project Director' }
 ];
 
 export function DashboardLayout({ onLogout }) {
