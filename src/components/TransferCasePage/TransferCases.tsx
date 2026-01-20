@@ -4,7 +4,7 @@ import { Plus, Eye, Edit } from 'lucide-react';
 /* ---------------- CONSTANTS ---------------- */
 
 const EXECUTION_TYPES = ['Full', 'Partial'];
-const CATEGORIES = ['Service', 'Bl','Gift','Death Case','Installment'];
+const CATEGORIES = ['Service Benefit', 'Billeting','Gift Case','Death Case'];
 const LOCATIONS = ['Karachi', 'Islamabad', 'Gwadar', 'PN Farms'];
 const STATUSES = ['Forwarded', 'Action Awaited'];
 
@@ -228,7 +228,7 @@ export function TransferCases() {
         <table className="w-full">
           <thead className="bg-slate-50 border-b">
             <tr>
-              <th className="px-6 py-4 text-left">Case No</th>
+              <th className="px-6 py-4 text-left">Registration No</th>
               <th className="px-6 py-4 text-left">Seller</th>
               <th className="px-6 py-4 text-left">Purchaser</th>
               <th className="px-6 py-4 text-left">Location</th>
@@ -318,7 +318,10 @@ export function TransferCases() {
                 onChange={v => handleChange('purchaserName', v)} />
               <Input label="Size (Sq Yd)" value={selectedCase.sizeSqYd} disabled={mode === 'view'}
                 onChange={v => handleChange('sizeSqYd', v)} />
-              <Input label="CNIC No" value={selectedCase.cnic} disabled={mode === 'view'}
+              <Input label="Purchaser CNIC No" value={selectedCase.cnic} disabled={mode === 'view'}
+                onChange={v => handleChange('cnic', v)} />
+                
+                <Input label="Seller CNIC No" value={selectedCase.cnic} disabled={mode === 'view'}
                 onChange={v => handleChange('cnic', v)} />
 
               <Input label="Executed Office Name" value={selectedCase.executedOfficeName} disabled={mode === 'view'}
@@ -355,8 +358,7 @@ export function TransferCases() {
               <Input label="Estate Agent" value={selectedCase.estateAgent} disabled={mode === 'view'}
                 onChange={v => handleChange('estateAgent', v)} />
 
-              <Input label="Property Dealer" value={selectedCase.propertyDealer} disabled={mode === 'view'}
-                onChange={v => handleChange('propertyDealer', v)} />
+              
 
               <Input label="Rate (Rs Millions)" value={selectedCase.rateMillions} disabled={mode === 'view'}
                 onChange={v => handleChange('rateMillions', v)} />

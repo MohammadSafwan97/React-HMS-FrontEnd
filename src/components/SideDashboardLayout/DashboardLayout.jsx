@@ -22,6 +22,7 @@ const navItems = [
   { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { path: '/employees', icon: Users, label: 'Employees' },
   { path: '/attendance', icon: Clock, label: 'Attendance' },
+  { path: '/leave-record', icon: Clock, label: 'Leave Record' },
   { path: '/transfer-cases', icon: FileText, label: 'Transfer Cases' },
   { path: '/pao-management', icon: FileSpreadsheet, label: 'PAL / PAO Management' },
   { path: '/ndc-noc-records', icon: Shield, label: 'NDC / NOC Records' },
@@ -49,7 +50,7 @@ const NAV_BY_ROLE = {
         path !== '/settings'
     ),
 
-  employee: ['/employees', '/attendance'],
+  employee: ['/employees', '/attendance','/leave-record'],
 
   director: ['/project-director'],
 };
@@ -61,7 +62,7 @@ const NAV_BY_ROLE = {
 export function DashboardLayout({ user, onLogout }) {
   // 🛡 SAFETY GUARD
   if (!user || !user.role) {
-    return null; // or loader
+    return null; 
   }
 
   const allowedPaths = NAV_BY_ROLE[user.role] || [];
@@ -135,7 +136,7 @@ export function DashboardLayout({ user, onLogout }) {
         </div>
       </aside>
 
-      {/* MAIN CONTENT */}
+      
       <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>

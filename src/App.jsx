@@ -12,6 +12,7 @@ import { PAOPALManagement } from './components/PAOPALManagement';
 import { NDCNOCRecords } from './components/NDCNOCRecords';
 import { EstateAgents } from './components/EstateAgents';
 import { Employees } from './Pages/EmployeesPage/Employees';
+import { EmployeeLeaveManagement } from './components/EmployeeLeaveManagement';
 import { Attendance } from './Pages/AttendancePage/Attendance';
 import { ConstructionProjects } from './components/ConstructionProjects';
 import { Reports } from './components/Reports';
@@ -78,6 +79,7 @@ export default function App() {
           {/* ROLE BASED */}
           <Route path="transfer-cases" element={<TransferCases />} />
           <Route path="employees" element={<Employees />} />
+          <Route path="leave-record" element={<EmployeeLeaveManagement />} />
           <Route path="attendance" element={<Attendance />} />
           <Route path="project-director" element={<ProjectDirectorDashboard />} />
 
