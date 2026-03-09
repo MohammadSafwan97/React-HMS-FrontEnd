@@ -1,7 +1,7 @@
 import { User, Edit, Phone } from 'lucide-react';
-import { getIdLabel } from '../../utils/employees/helper.js';
+import { getIdLabel } from '../../utils/patients/helper.js';
 
-export default function EmployeeCard({ emp, onEdit }) {
+export default function PatientCard({ emp, onEdit }) {
   return (
     <div className="bg-white border rounded-xl p-6">
       <div className="flex justify-between mb-3">
