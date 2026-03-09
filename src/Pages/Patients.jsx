@@ -1,53 +1,51 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { patientsMock } from '../../mocks/patientmock.js';
+import { patientsMock } from "../mocks/patientmock.js";
+import { tabCategoryMap } from "../utils/patients/helper.js";
 
-import PatientHeader from '../../components/patients/PatientHeader.jsx'
-import PatientSearch from '../../components/patients/PatientHeader.jsx'
-import PatientCard from '../../components/patients/PatientCard';
-import PatientModal from '../../components/patients/PatientModal';
-import PatientReportModal from '../../components/patients/PatientReportModal';
+import PatientHeader from "../components/patients/PatientHeader.jsx";
+import PatientSearch from "../components/patients/PatientSearch.jsx";
+import PatientCard from "../components/patients/PatientCard.jsx";
+import PatientModal from "../components/patients/PatientModal.jsx";
+import PatientReportModal from "../components/patients/PatientReportModal.jsx";
 
-export function patients() {
+export function Patients() {
 
   /* ---------------- STATE ---------------- */
 
   const [patients, setPatients] = useState(patientsMock);
-  const [activeTab, setActiveTab] = useState('Inpatient');
-  const [search, setSearch] = useState('');
+  const [activeTab, setActiveTab] = useState("inpatient");
+  const [search, setSearch] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [showReport, setShowReport] = useState(false);
 
-  const [mode, setMode] = useState('add');
+  const [mode, setMode] = useState("add");
   const [formData, setFormData] = useState({});
-
-  /* -------- DISCHARGE + TRANSFER STATE -------- */
 
   const [leaves, setLeaves] = useState([]);
   const [transfers, setTransfers] = useState([]);
 
   const [leaveForm, setLeaveForm] = useState({
-    patientId: '',
-    type: 'Routine',
-    from: '',
-    to: '',
+    patientId: "",
+    type: "Routine",
+    from: "",
+    to: "",
   });
 
   const [transferForm, setTransferForm] = useState({
-    patientId: '',
-    fromWard: '',
-    toWard: '',
-    date: '',
+    patientId: "",
+    fromWard: "",
+    toWard: "",
+    date: "",
   });
 
   /* ---------------- DERIVED DATA ---------------- */
 
   const filteredPatients = patients.filter((patient) => {
 
-    const matchesTab = activeTab
-      ? patient.patientType === activeTab
-      : true;
+    const matchesTab =
+      tabCategoryMap[activeTab]?.includes(patient.patientType);
 
     const matchesSearch =
       patient.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -55,25 +53,24 @@ export function patients() {
       patient.patientId.toLowerCase().includes(search.toLowerCase());
 
     return matchesTab && matchesSearch;
-
   });
 
   const grouped = {
-    inpatient: patients.filter(p => p.patientType === 'Inpatient'),
-    outpatient: patients.filter(p => p.patientType === 'Outpatient'),
-    emergency: patients.filter(p => p.patientType === 'Emergency'),
+    inpatient: patients.filter((p) => p.patientType === "Inpatient"),
+    outpatient: patients.filter((p) => p.patientType === "Outpatient"),
+    emergency: patients.filter((p) => p.patientType === "Emergency"),
   };
 
   /* ---------------- HANDLERS ---------------- */
 
   const openAdd = () => {
-    setMode('add');
+    setMode("add");
     setFormData({});
     setShowModal(true);
   };
 
   const openEdit = (patient) => {
-    setMode('edit');
+    setMode("edit");
     setFormData(patient);
     setShowModal(true);
   };
@@ -81,15 +78,15 @@ export function patients() {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSave = () => {
 
-    setPatients(prev =>
-      mode === 'edit'
-        ? prev.map(p =>
+    setPatients((prev) =>
+      mode === "edit"
+        ? prev.map((p) =>
             p.patientId === formData.patientId ? formData : p
           )
         : [...prev, formData]
@@ -98,65 +95,60 @@ export function patients() {
     setShowModal(false);
   };
 
-  /* ---------------- PATIENT DISCHARGE ---------------- */
+  /* ---------------- DISCHARGE ---------------- */
 
   const addLeave = (e) => {
-
     e.preventDefault();
 
     setLeaves([
       ...leaves,
-      { ...leaveForm, id: Date.now().toString() }
+      { ...leaveForm, id: Date.now().toString() },
     ]);
 
     setLeaveForm({
-      patientId: '',
-      type: 'Routine',
-      from: '',
-      to: '',
+      patientId: "",
+      type: "Routine",
+      from: "",
+      to: "",
     });
-
   };
 
-  /* ---------------- WARD TRANSFER ---------------- */
+  /* ---------------- TRANSFER ---------------- */
 
   const addTransfer = (e) => {
-
     e.preventDefault();
 
     setTransfers([
       ...transfers,
-      { ...transferForm, id: Date.now().toString() }
+      { ...transferForm, id: Date.now().toString() },
     ]);
 
     setTransferForm({
-      patientId: '',
-      fromWard: '',
-      toWard: '',
-      date: '',
+      patientId: "",
+      fromWard: "",
+      toWard: "",
+      date: "",
     });
-
   };
 
   /* ---------------- UI ---------------- */
 
   return (
-
     <div className="p-8 text-slate-900 space-y-10">
 
-      <patientsHeader
+      <PatientHeader
         onAdd={openAdd}
         onReport={() => setShowReport(true)}
       />
 
-      {/* PATIENT TYPE TABS */}
+      {/* Tabs */}
 
       <div className="flex gap-2">
 
         {[
-          ['Inpatient', 'Inpatients'],
-          ['Outpatient', 'Outpatients'],
-          ['Emergency', 'Emergency Patients'],
+          ["inpatient", "Inpatients"],
+          ["outpatient", "Outpatients"],
+          ["emergency", "Emergency Patients"],
         ].map(([key, label]) => (
 
           <button
@@ -164,42 +156,38 @@ export function patients() {
             onClick={() => setActiveTab(key)}
             className={`px-4 py-2 rounded-lg ${
               activeTab === key
-                ? 'bg-blue-900 text-white'
-                : 'border'
+                ? "bg-blue-900 text-white"
+                : "border"
             }`}
           >
             {label}
           </button>
 
         ))}
-
       </div>
 
-      <patientsSearch value={search} onChange={setSearch} />
+      <PatientSearch value={search} onChange={setSearch} />
 
-      {/* PATIENT GRID */}
+      {/* Patient Grid */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {filteredPatients.map((patient) => (
 
-          <patientCard
+          <PatientCard
             key={patient.patientId}
-            emp={patient}
+            patient={patient}
             onEdit={openEdit}
           />
 
         ))}
-
       </div>
 
-      {/* -------- PATIENT DISCHARGE -------- */}
+      {/* PATIENT DISCHARGE */}
 
       <section className="bg-white border rounded-xl p-6">
 
-        <h2 className="font-semibold mb-4">
-          Patient Discharge
-        </h2>
+        <h2 className="font-semibold mb-4">Patient Discharge</h2>
 
         <form
           onSubmit={addLeave}
@@ -213,7 +201,7 @@ export function patients() {
             onChange={(e) =>
               setLeaveForm({
                 ...leaveForm,
-                patientId: e.target.value
+                patientId: e.target.value,
               })
             }
           />
@@ -224,7 +212,7 @@ export function patients() {
             onChange={(e) =>
               setLeaveForm({
                 ...leaveForm,
-                type: e.target.value
+                type: e.target.value,
               })
             }
           >
@@ -240,7 +228,7 @@ export function patients() {
             onChange={(e) =>
               setLeaveForm({
                 ...leaveForm,
-                from: e.target.value
+                from: e.target.value,
               })
             }
           />
@@ -252,7 +240,7 @@ export function patients() {
             onChange={(e) =>
               setLeaveForm({
                 ...leaveForm,
-                to: e.target.value
+                to: e.target.value,
               })
             }
           />
@@ -273,13 +261,11 @@ export function patients() {
 
       </section>
 
-      {/* -------- WARD TRANSFER -------- */}
+      {/* WARD TRANSFERS */}
 
       <section className="bg-white border rounded-xl p-6">
 
-        <h2 className="font-semibold mb-4">
-          Ward Transfers
-        </h2>
+        <h2 className="font-semibold mb-4">Ward Transfers</h2>
 
         <form
           onSubmit={addTransfer}
@@ -293,7 +279,7 @@ export function patients() {
             onChange={(e) =>
               setTransferForm({
                 ...transferForm,
-                patientId: e.target.value
+                patientId: e.target.value,
               })
             }
           />
@@ -305,7 +291,7 @@ export function patients() {
             onChange={(e) =>
               setTransferForm({
                 ...transferForm,
-                fromWard: e.target.value
+                fromWard: e.target.value,
               })
             }
           />
@@ -317,7 +303,7 @@ export function patients() {
             onChange={(e) =>
               setTransferForm({
                 ...transferForm,
-                toWard: e.target.value
+                toWard: e.target.value,
               })
             }
           />
@@ -329,7 +315,7 @@ export function patients() {
             onChange={(e) =>
               setTransferForm({
                 ...transferForm,
-                date: e.target.value
+                date: e.target.value,
               })
             }
           />
@@ -340,41 +326,28 @@ export function patients() {
 
         </form>
 
-        {transfers.map((t) => (
-
-          <div key={t.id} className="text-sm border-b py-2">
-            {t.patientId} — {t.fromWard} → {t.toWard} ({t.date})
-          </div>
-
-        ))}
-
       </section>
 
       {/* MODALS */}
 
       {showModal && (
-
-        <patientModal
+        <PatientModal
           mode={mode}
           formData={formData}
           onChange={handleChange}
           onSave={handleSave}
           onClose={() => setShowModal(false)}
         />
-
       )}
 
       {showReport && (
-
-        <patientReportModal
+        <PatientReportModal
           patients={patients}
           grouped={grouped}
           onClose={() => setShowReport(false)}
         />
-
       )}
 
     </div>
-
   );
 }

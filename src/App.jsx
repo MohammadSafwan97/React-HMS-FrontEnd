@@ -11,7 +11,8 @@ import { PALManagement } from './components/PALManagement';
 import { PAOPALManagement } from './components/PAOPALManagement';
 import { NDCNOCRecords } from './components/NDCNOCRecords';
 import { EstateAgents } from './components/EstateAgents';
-import { Employees } from './Pages/EmployeesPage/Employees';
+import { Patients } from './Pages/Patients';
+import { Doctors } from './Pages/Doctor';
 import { EmployeeLeaveManagement } from './components/EmployeeLeaveManagement';
 import { Attendance } from './Pages/AttendancePage/Attendance';
 import { ConstructionProjects } from './components/ConstructionProjects';
@@ -78,7 +79,8 @@ export default function App() {
 
           {/* ROLE BASED */}
           <Route path="transfer-cases" element={<TransferCases />} />
-          <Route path="employees" element={<Employees />} />
+          <Route path="patients" element={<Patients />} />
+          <Route path="doctors" element={<Doctors />} />
           <Route path="leave-record" element={<EmployeeLeaveManagement />} />
           <Route path="attendance" element={<Attendance />} />
           <Route path="project-director" element={<ProjectDirectorDashboard />} />

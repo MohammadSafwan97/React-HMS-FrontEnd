@@ -20,7 +20,8 @@ import {
 
 const navItems = [
   { path: '/dashboard', icon: LayoutDashboard, label: 'Hospital Dashboard' },
-  { path: '/employees', icon: UserPlus, label: 'Patients' },
+  { path: '/patients', icon: UserPlus, label: 'Patients' },
+  { path: '/doctors', icon: Clock, label: 'Doctors' },
   { path: '/attendance', icon: Clock, label: 'Doctor Attendance' },
   { path: '/leave-record', icon: CalendarOff, label: 'Staff Leave' },
   { path: '/transfer-cases', icon: CalendarCheck, label: 'Appointments' },
