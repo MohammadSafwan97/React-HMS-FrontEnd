@@ -2,37 +2,37 @@ import { Outlet, NavLink } from 'react-router';
 import logo from '../../assets/anchorageKarachi.jpg';
 import {
   LayoutDashboard,
-  FileText,
-  Building,
-  FileSpreadsheet,
-  Shield,
-  Briefcase,
-  Users,
+  UserPlus,
+  Stethoscope,
   Clock,
-  Construction,
+  CalendarCheck,
+  CalendarOff,
+  FileText,
+  ShieldCheck,
+  Building2,
   BarChart3,
   Settings as SettingsIcon,
+  MessageCircle,
   LogOut,
   User,
 } from 'lucide-react';
-
 /* ---------------- NAV ITEMS ---------------- */
 
 const navItems = [
-  { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/employees', icon: Users, label: 'Employees' },
-  { path: '/attendance', icon: Clock, label: 'Attendance' },
-  { path: '/leave-record', icon: Clock, label: 'Leave Record' },
-  { path: '/transfer-cases', icon: FileText, label: 'Transfer Cases' },
-  { path: '/pao-management', icon: FileSpreadsheet, label: 'PAL / PAO Management' },
-  { path: '/ndc-noc-records', icon: Shield, label: 'NDC / NOC Records' },
-  { path: '/estate-agents', icon: Briefcase, label: 'Estate Agents' },
-  { path: '/construction-projects', icon: Construction, label: 'Construction Projects' },
-  { path: '/property-records', icon: Building, label: 'Gallery' },
-  { path: '/reports', icon: BarChart3, label: 'Reports' },
-  { path: '/settings', icon: SettingsIcon, label: 'Settings' },
-  { path: '/chatbot', icon: SettingsIcon, label: 'Help' },
-  { path: '/project-director', icon: SettingsIcon, label: 'Project Director' },
+  { path: '/dashboard', icon: LayoutDashboard, label: 'Hospital Dashboard' },
+  { path: '/employees', icon: UserPlus, label: 'Patients' },
+  { path: '/attendance', icon: Clock, label: 'Doctor Attendance' },
+  { path: '/leave-record', icon: CalendarOff, label: 'Staff Leave' },
+  { path: '/transfer-cases', icon: CalendarCheck, label: 'Appointments' },
+  { path: '/pao-management', icon: FileText, label: 'Medical Records' },
+  { path: '/ndc-noc-records', icon: ShieldCheck, label: 'Compliance Records' },
+  { path: '/estate-agents', icon: Stethoscope, label: 'Doctors' },
+  { path: '/construction-projects', icon: Building2, label: 'Departments' },
+  { path: '/property-records', icon: Building2, label: 'Hospital Gallery' },
+  { path: '/reports', icon: BarChart3, label: 'Hospital Reports' },
+  { path: '/settings', icon: SettingsIcon, label: 'System Settings' },
+  { path: '/chatbot', icon: MessageCircle, label: 'Help Assistant' },
+  { path: '/project-director', icon: User, label: 'Hospital Director' },
 ];
 
 /* ---------------- ROLE → NAV MAP ---------------- */
@@ -77,10 +77,10 @@ export function DashboardLayout({ user, onLogout }) {
           <div className="flex items-center gap-3">
             <img
               src={logo}
-              alt="Anchorage Karachi"
+              alt="Hospital Management"
               className="w-16 h-16 rounded-full"
             />
-            <div className="text-sm opacity-90">Anchorage Karachi</div>
+            <div className="text-sm opacity-90">Hospital Management</div>
           </div>
         </div>
 
