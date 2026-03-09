@@ -6,15 +6,15 @@ export default function EmployeeReportModal({ employees, grouped, onClose }) {
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl w-full max-w-4xl p-6">
         <div className="flex justify-between mb-4">
-          <h2 className="font-semibold">Employee Report</h2>
+          <h2 className="font-semibold">Patient Report</h2>
           <button onClick={onClose}>✕</button>
         </div>
 
         <div className="grid grid-cols-4 gap-4 mb-6">
           <Summary label="Total" value={employees.length} />
-          <Summary label="Uniform" value={grouped.uniform.length} />
-          <Summary label="Civilian" value={grouped.civilian.length} />
-          <Summary label="Contract" value={grouped.contract.length} />
+          <Summary label="InPatient" value={grouped.uniform.length} />
+          <Summary label="OutPatient" value={grouped.civilian.length} />
+          <Summary label="Emergency" value={grouped.contract.length} />
         </div>
 
         <button onClick={() => window.print()} className="btn border mb-4">

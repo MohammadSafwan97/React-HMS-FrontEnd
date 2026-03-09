@@ -3,10 +3,16 @@ export default function UpcomingTasks({ upcomingTasks = [] }) {
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
 
       <h2 className="text-lg font-semibold text-slate-900 mb-6">
-        Upcoming Tasks
+        Upcoming Appointments
       </h2>
 
       <div className="space-y-4">
+
+        {upcomingTasks.length === 0 && (
+          <div className="text-sm text-slate-500 text-center py-6">
+            No upcoming appointments
+          </div>
+        )}
 
         {upcomingTasks.map((task) => (
 

@@ -25,6 +25,12 @@ export default function RecentActivity({ recentActivity = [] }) {
 
       <div className="space-y-4">
 
+        {recentActivity.length === 0 && (
+          <div className="text-sm text-slate-500 text-center py-6">
+            No recent activity
+          </div>
+        )}
+
         {recentActivity.map((activity) => (
 
           <div

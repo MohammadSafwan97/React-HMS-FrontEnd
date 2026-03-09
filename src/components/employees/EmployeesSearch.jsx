@@ -7,7 +7,7 @@ export default function EmployeesSearch({ value, onChange }) {
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search by name, designation or ID..."
+        placeholder="Search by patient name, ward or ID..."
         className="w-full pl-9 pr-4 py-2 border rounded-lg"
       />
     </div>

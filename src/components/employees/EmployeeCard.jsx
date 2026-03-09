@@ -12,11 +12,11 @@ export default function EmployeeCard({ emp, onEdit }) {
       </div>
 
       <h3 className="font-medium">{emp.name}</h3>
-      <p className="text-sm text-slate-600">{emp.designation}</p>
+      <p className="text-sm text-slate-600">Ward: {emp.designation}</p>
 
       <div className="text-sm mt-3 space-y-1">
         <div>{getIdLabel(emp.category)}: {emp.id}</div>
-        <div>Category: {emp.category}</div>
+        <div>Patient Type: {emp.category}</div>
       </div>
 
       <div className="flex items-center gap-2 mt-3 text-sm">

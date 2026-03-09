@@ -1,10 +1,10 @@
 import { Plus, FileText } from 'lucide-react';
 
-export default function EmployeesHeader({ onAdd, onReport }) {
+export default function PatientsHeader({ onAdd, onReport }) {
   return (
     <div className="flex justify-between mb-6">
       <h1 className="text-xl font-semibold">
-        Employee Management – Anchorage Karachi
+        Patient Management – Hospital System
       </h1>
 
       <div className="flex gap-3">
@@ -42,7 +42,7 @@ export default function EmployeesHeader({ onAdd, onReport }) {
   "
 >
   <Plus className="w-4 h-4" />
-  Add Employee
+  Add Patient
 </button>
 
       </div>

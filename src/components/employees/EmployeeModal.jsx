@@ -11,7 +11,7 @@ export default function EmployeeModal({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl w-full max-w-3xl p-6">
         <h2 className="font-semibold mb-4">
-          {mode === 'edit' ? 'Edit Employee' : 'Add Employee'}
+          {mode === 'edit' ? 'Edit Patient' : 'Add Patient'}
         </h2>
 
         <div className="grid grid-cols-2 gap-4">

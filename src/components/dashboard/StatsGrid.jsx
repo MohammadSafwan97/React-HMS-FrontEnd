@@ -9,10 +9,10 @@ export default function StatsGrid({ stats = [] }) {
 
         return (
           <div
-            key={stat.label}
+            key={stat.id}
             className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow"
           >
-            
+
             <div className="mb-4">
               <div
                 className={`w-12 h-12 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center`}
