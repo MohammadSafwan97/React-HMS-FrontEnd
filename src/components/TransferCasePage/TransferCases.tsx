@@ -16,6 +16,18 @@ const STATUSES = [
   "Cancelled",
 ];
 
+const DOCTORS = [
+  "Dr. Sara Ali",
+  "Dr. Ahmed Khan",
+  "Dr. Tariq Mahmood",
+];
+
+const doctorSlots = {
+  "Dr. Sara Ali": ["09:00", "09:30", "10:00", "10:30", "11:00"],
+  "Dr. Ahmed Khan": ["10:00", "10:30", "11:00", "11:30"],
+  "Dr. Tariq Mahmood": ["08:30", "09:00", "09:30", "10:00"],
+};
+
 /* ---------------- MOCK DATA ---------------- */
 
 const initialAppointments = [
@@ -38,16 +50,6 @@ const initialAppointments = [
     time: "11:45",
     status: "Completed",
     remarks: "Skin allergy treatment",
-  },
-  {
-    id: "AP-2026-003",
-    patientName: "Usman Ali",
-    doctorName: "Dr. Tariq Mahmood",
-    department: "Orthopedics",
-    date: "2026-03-14",
-    time: "09:00",
-    status: "Scheduled",
-    remarks: "Knee pain consultation",
   },
 ];
 
@@ -213,7 +215,6 @@ export function TransferCases() {
                 <td className="px-6 py-4">{a.time}</td>
 
                 <td className="px-6 py-4">
-
                   <span
                     className={`px-2 py-1 rounded text-xs ${
                       a.status === "Completed"
@@ -225,19 +226,11 @@ export function TransferCases() {
                   >
                     {a.status}
                   </span>
-
                 </td>
 
                 <td className="px-6 py-4 flex gap-2">
-
-                  <button onClick={() => openModal(a, "view")}>
-                    <Eye />
-                  </button>
-
-                  <button onClick={() => openModal(a, "edit")}>
-                    <Edit />
-                  </button>
-
+                  <button onClick={() => openModal(a, "view")}><Eye /></button>
+                  <button onClick={() => openModal(a, "edit")}><Edit /></button>
                 </td>
 
               </tr>
@@ -259,13 +252,11 @@ export function TransferCases() {
           <div className="bg-white p-6 rounded-xl max-w-2xl w-full mx-4">
 
             <h2 className="font-semibold mb-4">
-
               {mode === "view"
                 ? "View Appointment"
                 : mode === "edit"
                 ? "Edit Appointment"
                 : "Add Appointment"}
-
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -277,9 +268,10 @@ export function TransferCases() {
                 onChange={(v) => handleChange("patientName", v)}
               />
 
-              <Input
-                label="Doctor Name"
+              <SelectField
+                label="Doctor"
                 value={selectedAppointment.doctorName}
+                options={DOCTORS}
                 disabled={mode === "view"}
                 onChange={(v) => handleChange("doctorName", v)}
               />
@@ -300,11 +292,11 @@ export function TransferCases() {
                 onChange={(v) => handleChange("date", v)}
               />
 
-              <Input
-                type="time"
-                label="Appointment Time"
+              <SelectField
+                label="Time Slot"
                 value={selectedAppointment.time}
-                disabled={mode === "view"}
+                options={doctorSlots[selectedAppointment.doctorName] || []}
+                disabled={mode === "view" || !selectedAppointment.doctorName}
                 onChange={(v) => handleChange("time", v)}
               />
 
@@ -322,9 +314,7 @@ export function TransferCases() {
                 <textarea
                   disabled={mode === "view"}
                   value={selectedAppointment.remarks}
-                  onChange={(e) =>
-                    handleChange("remarks", e.target.value)
-                  }
+                  onChange={(e) => handleChange("remarks", e.target.value)}
                   className="w-full mt-1 border rounded-lg px-3 py-2"
                 />
               </div>

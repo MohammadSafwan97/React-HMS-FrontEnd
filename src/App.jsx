@@ -13,6 +13,7 @@ import { NDCNOCRecords } from './components/NDCNOCRecords';
 import { EstateAgents } from './components/EstateAgents';
 import { Patients } from './Pages/Patients';
 import { Doctors } from './Pages/Doctor';
+import { MedicalRecords } from './Pages/MedicalRecords';
 import { EmployeeLeaveManagement } from './components/EmployeeLeaveManagement';
 import { Attendance } from './Pages/AttendancePage/Attendance';
 import { ConstructionProjects } from './components/ConstructionProjects';
@@ -87,7 +88,7 @@ export default function App() {
 
           {/* COMMON / ADMIN */}
           <Route path="property-records" element={<AnchorageKarachiGallery />} />
-          <Route path="pal-management" element={<PALManagement />} />
+          <Route path="medical-records" element={<MedicalRecords />} />
           <Route path="pao-management" element={<PAOPALManagement />} />
           <Route path="ndc-noc-records" element={<NDCNOCRecords />} />
           <Route path="estate-agents" element={<EstateAgents />} />

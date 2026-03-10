@@ -26,13 +26,15 @@ export default function PatientModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
-      <div className="bg-white rounded-xl w-full max-w-3xl p-6">
+      {/* Modal Container */}
+      <div className="bg-white rounded-xl w-full max-w-3xl p-6 max-h-[80vh] overflow-y-auto">
 
         <h2 className="text-lg font-semibold mb-6">
           {mode === 'edit' ? 'Edit Patient' : 'Add Patient'}
         </h2>
 
-        <div className="grid grid-cols-2 gap-4">
+        {/* Form Fields */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {fields.map(([name, label]) => (
 
@@ -58,6 +60,7 @@ export default function PatientModal({
 
         </div>
 
+        {/* Buttons */}
         <div className="flex justify-end gap-3 mt-8">
 
           <button
