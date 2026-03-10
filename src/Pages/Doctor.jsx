@@ -1,18 +1,20 @@
-import { useState } from "react";
-
-import { doctorsMock } from "../mocks/doctormock.js";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { getAllDoctors,createDoctor,updateDoctor } from "../services/doctorService.js";
 
 import DoctorHeader from "..//components/doctors/DoctorHeader.jsx";
 import DoctorSearch from "../components/doctors/DoctorSearch.jsx";
 import DoctorCard from "../components/doctors/DoctorCard.jsx";
 import DoctorModal from "..//components/doctors/DoctorModal.jsx";
 import DoctorReportModal from "../components/doctors/DoctorReportModal.jsx";
+import { notifySuccess, notifyError } from "../utils/notification";
 
 export function Doctors() {
 
+  
   /* ---------------- STATE ---------------- */
 
-  const [doctors, setDoctors] = useState(doctorsMock);
+  const [doctors, setDoctors] = useState([]);
   const [search, setSearch] = useState("");
 
   const [showModal, setShowModal] = useState(false);
@@ -21,6 +23,15 @@ export function Doctors() {
   const [mode, setMode] = useState("add");
   const [formData, setFormData] = useState({});
 
+  /* ---------------- GET ALL DOCTORS ---------------- */
+   const loadDoctors=async()=>{
+    const data=await getAllDoctors();
+    setDoctors(data);
+   }
+
+   useEffect(()=>{
+    loadDoctors();
+   },[])
   /* ---------------- FILTERED DATA ---------------- */
 
   const filteredDoctors = doctors.filter((doctor) => {
@@ -28,7 +39,7 @@ export function Doctors() {
     return (
       doctor.name.toLowerCase().includes(search.toLowerCase()) ||
       doctor.specialization.toLowerCase().includes(search.toLowerCase()) ||
-      doctor.doctorId.toLowerCase().includes(search.toLowerCase())
+      doctor.id.toString().includes(search)
     );
 
   });
@@ -56,21 +67,42 @@ export function Doctors() {
 
   };
 
-  const handleSave = () => {
+ const handleSave = async () => {
+  try {
 
-    setDoctors((prev) =>
-      mode === "edit"
-        ? prev.map((d) =>
-            d.doctorId === formData.doctorId ? formData : d
-          )
-        : [...prev, formData]
-    );
+    if (mode === "edit") {
 
-    setShowModal(false);
+      const updatedDoctor = await updateDoctor(
+        formData.id,
+        formData
+      );
 
-  };
+      setDoctors((prev) =>
+        prev.map((doctor) =>
+          doctor.id === updatedDoctor.id ? updatedDoctor : doctor
+        )
+      );
+      notifySuccess("Doctor updated successfully");
+    } else {
 
-  /* ---------------- UI ---------------- */
+      const newDoctor = await createDoctor(formData);
+
+      setDoctors((prev) => [
+        ...prev,
+        newDoctor
+      ]);
+      notifySuccess("Doctor created successfully");
+    }
+
+  } catch (error) {
+    console.log("error saving doctor", error);
+    notifyError("Failed to save doctor");
+  }
+  setShowModal(false)
+};
+
+
+ 
 
   return (
 
@@ -86,7 +118,7 @@ export function Doctors() {
         onChange={setSearch}
       />
 
-      {/* DOCTOR GRID */}
+      
 
       {filteredDoctors.length === 0 ? (
 
@@ -101,7 +133,7 @@ export function Doctors() {
           {filteredDoctors.map((doctor) => (
 
             <DoctorCard
-              key={doctor.doctorId}
+              key={doctor.id}
               doctor={doctor}
               onEdit={openEdit}
             />

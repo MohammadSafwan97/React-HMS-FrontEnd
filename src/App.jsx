@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router';
 
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { LoginPage } from './components/LoginPage';
 import { DashboardLayout } from './components/SideDashboardLayout/DashboardLayout';
 import { ProjectDirectorDashboard } from './Pages/ProjectDirector/ProjectDirectorDashboard';
@@ -97,7 +99,9 @@ export default function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="chatbot" element={<Chatbot />} />
         </Route>
+        
       </Routes>
+      <ToastContainer />
     </Router>
   );
 }

@@ -7,7 +7,7 @@ export default function DoctorModal({
 }) {
 
   const fields = [
-    ["doctorId", "Doctor ID"],
+    
     ["name", "Doctor Name"],
     ["specialization", "Specialization"],
     ["department", "Department"],
