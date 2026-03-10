@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-
 import { tabCategoryMap } from "../utils/patients/helper.js";
-import {getAllPatients,createPatient,updatePatient} from "../services/patientService.js"
+import { getAllPatients, createPatient, updatePatient } from "../services/patientService.js";
+
 import PatientHeader from "../components/patients/PatientHeader.jsx";
 import PatientSearch from "../components/patients/PatientSearch.jsx";
 import PatientCard from "../components/patients/PatientCard.jsx";
@@ -23,20 +23,29 @@ export function Patients() {
   const [mode, setMode] = useState("add");
   const [formData, setFormData] = useState({});
 
-// Load Patients from DB
- const loadPatients=async()=>{
-const data=await getAllPatients();
-setPatients(data);
- }
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  /* ---------------- LOAD PATIENTS ---------------- */
 
+  const loadPatients = async () => {
+    try {
+      setLoading(true);
+      const data = await getAllPatients();
+      setPatients(data || []);
+    } catch (err) {
+      console.error("Failed to load patients:", err);
+      setError("Failed to load patients.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    loadPatients();
+  }, []);
 
- useEffect(()=>{
-loadPatients();
- },[])
-
- 
+  /* ---------------- FILTERING ---------------- */
 
   const filteredPatients = patients.filter((patient) => {
 
@@ -44,12 +53,14 @@ loadPatients();
       tabCategoryMap[activeTab]?.includes(patient.patientType);
 
     const matchesSearch =
-      patient.name.toLowerCase().includes(search.toLowerCase()) ||
-      patient.ward.toLowerCase().includes(search.toLowerCase()) ||
-      patient.patientId.toLowerCase().includes(search.toLowerCase());
+      (patient.name || "").toLowerCase().includes(search.toLowerCase()) ||
+      (patient.ward || "").toLowerCase().includes(search.toLowerCase()) ||
+      (patient.patientId || "").toLowerCase().includes(search.toLowerCase());
 
     return matchesTab && matchesSearch;
   });
+
+  /* ---------------- GROUPING FOR REPORT ---------------- */
 
   const grouped = {
     inpatient: patients.filter((p) => p.patientType === "Inpatient"),
@@ -78,27 +89,46 @@ loadPatients();
     });
   };
 
-const handleSave=async()=>{
-  if(mode=="edit"){
-    const updatedPatient=await updatePatient(
-      formData.patientId,formData
-    );
-    setPatients((prev)=>
-    prev.map((p)=>p.patientId==updatedPatient.patientId
-    ?updatedPatient:p
-    ))
-  }
-  else{
-    const newPatient=await createPatient(formData);
-    setPatients((prev)=>([
-      ...prev,newPatient
-    ]))
-  }
-  setShowModal(false);
-}
+  const handleSave = async () => {
 
+    try {
 
+      if (mode === "edit") {
 
+        const updatedPatient = await updatePatient(
+          formData.patientId,
+          formData
+        );
+
+        setPatients((prev) =>
+          prev.map((p) =>
+            p.patientId === updatedPatient.patientId
+              ? updatedPatient
+              : p
+          )
+        );
+
+      } else {
+
+        const newPatient = await createPatient(formData);
+
+        setPatients((prev) => [
+          ...prev,
+          newPatient
+        ]);
+      }
+
+      setShowModal(false);
+
+    } catch (err) {
+
+      console.error("Failed to save patient:", err);
+      alert("Failed to save patient. Please try again.");
+
+    }
+  };
+
+  /* ---------------- RENDER ---------------- */
 
   return (
     <div className="p-8 text-slate-900 space-y-10">
@@ -131,48 +161,65 @@ const handleSave=async()=>{
           </button>
 
         ))}
+
       </div>
 
       <PatientSearch value={search} onChange={setSearch} />
 
+      {/* Loading */}
+
+      {loading && (
+        <div className="text-center text-gray-500">
+          Loading patients...
+        </div>
+      )}
+
+      {/* Error */}
+
+      {error && (
+        <div className="text-center text-red-500">
+          {error}
+        </div>
+      )}
+
       {/* Patient Grid */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {!loading && !error && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        {filteredPatients.map((patient) => (
+          {filteredPatients.map((patient) => (
 
-          <PatientCard
-            key={patient.patientId}
-            patient={patient}
-            onEdit={openEdit}
-          />
-          
-        ))}
-        {
-          showModal&&
-          <PatientModal
+            <PatientCard
+              key={patient.patientId}
+              patient={patient}
+              onEdit={openEdit}
+            />
+
+          ))}
+
+        </div>
+      )}
+
+      {/* Patient Modal */}
+
+      {showModal && (
+        <PatientModal
           onChange={handleChange}
           onSave={handleSave}
           formData={formData}
-          onClose={()=>{setShowModal(false)}}
-          />
-        }
+          onClose={() => setShowModal(false)}
+        />
+      )}
 
-        {showReport && (
+      {/* Report Modal */}
+
+      {showReport && (
         <PatientReportModal
           patients={patients}
           grouped={grouped}
           onClose={() => setShowReport(false)}
         />
       )}
-      </div>
-
-
-    
-
-
-
-
 
     </div>
   );
