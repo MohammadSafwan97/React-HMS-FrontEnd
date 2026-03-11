@@ -124,7 +124,7 @@ export function AppointmentModal({
   return (
     <div className="fixed inset-0 bg-black/60 flex justify-center items-center">
 
-      <div className="bg-white p-6 rounded-xl max-w-2xl w-full">
+      <div className="bg-white p-6 rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
 
         <h2 className="text-lg font-semibold mb-4">
           {mode === "view"
