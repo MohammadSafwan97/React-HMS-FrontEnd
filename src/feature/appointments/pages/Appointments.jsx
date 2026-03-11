@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { getAppointments } from "../services/appointmentService";
-import { getAllDoctors } from "../services/doctorService";
-import { getAllPatients } from "../services/patientService";
+import { getAllDoctors } from "../../doctors/services/doctorService";
+import { getAllPatients } from "../../patients/services/patientService";
 
-import { AppointmentHeader } from "../components/appointments/AppointmentHeader";
-import { AppointmentTable } from "../components/appointments/AppointmentTable";
-import { AppointmentModal } from "../components/appointments/AppointmentModal";
+import { AppointmentHeader } from "../components/AppointmentHeader";
+import { AppointmentTable } from "../components/AppointmentTable";
+import { AppointmentModal } from "../components/AppointmentModal";
 
 export function Appointments() {
   const [appointments, setAppointments] = useState([]);
@@ -26,6 +26,7 @@ export function Appointments() {
     const docs = await getAllDoctors();
     const pats = await getAllPatients();
 
+    console.log(appts,docs,pats)
     setAppointments(appts || []);
     setDoctors(docs || []);
     setPatients(pats || []);
@@ -67,7 +68,7 @@ export function Appointments() {
       />
 
       <AppointmentTable
-        appointments={filteredAppointments}
+        appointments={appointments}
         patients={patients}
         doctors={doctors}
         openModal={openModal}

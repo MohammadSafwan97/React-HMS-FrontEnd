@@ -1,13 +1,13 @@
-import DashboardHeader from '../../components/dashboard/DashboardHeader';
-import StatsGrid from '../../components/dashboard/StatsGrid';
-import RecentActivity from '../../components/dashboard/RecentActivity';
-import UpcomingTasks from '../../components/dashboard/UpcomingTasks';
+import DashboardHeader from '../components/DashboardHeader';
+import StatsGrid from '../components/StatsGrid';
+import RecentActivity from '../components/RecentActivity';
+import UpcomingTasks from '../components/UpcomingTasks';
 
 import {
   dashboardStats,
   recentActivityMock,
   upcomingTasksMock,
-} from '../../mocks/dashboardmock';
+} from '../../../mocks/dashboardmock';
 
 
 export function MainDashboard() {

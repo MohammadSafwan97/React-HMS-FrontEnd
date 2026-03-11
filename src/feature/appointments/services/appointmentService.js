@@ -16,3 +16,4 @@ export const updateAppointment = async(id, appointment) => {
  const res=await axios.put(`${API_BASE}/appointments/${id}`, appointment);
  return res.data;
 };
+

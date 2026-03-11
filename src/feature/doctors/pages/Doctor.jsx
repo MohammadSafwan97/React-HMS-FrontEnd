@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { getAllDoctors,createDoctor,updateDoctor } from "../services/doctorService.js";
 
-import DoctorHeader from "..//components/doctors/DoctorHeader.jsx";
-import DoctorSearch from "../components/doctors/DoctorSearch.jsx";
-import DoctorCard from "../components/doctors/DoctorCard.jsx";
-import DoctorModal from "..//components/doctors/DoctorModal.jsx";
-import DoctorReportModal from "../components/doctors/DoctorReportModal.jsx";
-import { notifySuccess, notifyError } from "../utils/notification";
+import DoctorHeader from "../components/DoctorHeader.jsx";
+import DoctorSearch from "../components/DoctorSearch.jsx";
+import DoctorCard from "../components/DoctorCard.jsx";
+import DoctorModal from "../components/DoctorModal.jsx";
+import DoctorReportModal from "../components/DoctorReportModal.jsx";
+import { notifySuccess, notifyError } from "../../../shared/utils/notification.js";
 
 export function Doctors() {
 
@@ -24,12 +24,13 @@ export function Doctors() {
   const [formData, setFormData] = useState({});
 
   /* ---------------- GET ALL DOCTORS ---------------- */
-   const loadDoctors=async()=>{
+   
+
+   useEffect(()=>{
+    const loadDoctors=async()=>{
     const data=await getAllDoctors();
     setDoctors(data);
    }
-
-   useEffect(()=>{
     loadDoctors();
    },[])
   /* ---------------- FILTERED DATA ---------------- */

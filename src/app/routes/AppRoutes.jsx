@@ -3,27 +3,27 @@ import { Routes, Route, Navigate } from "react-router";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { getDefaultRoute } from "./roleRoutes";
 
-import { LoginPage } from "../components/LoginPage";
-import { DashboardLayout } from "../components/SideDashboardLayout/DashboardLayout";
+import { LoginPage } from "../LoginPage";
+import { DashboardLayout } from "../../shared/layout/DashboardLayout";
 
-import { MainDashboard } from "../components/MainDashboardPage/MainDashboard";
-import { Appointments } from "../Pages/Appointments";
-import { Patients } from "../Pages/Patients";
-import { Doctors } from "../Pages/Doctor";
-import { MedicalRecords } from "../Pages/MedicalRecords";
+import { MainDashboard } from "../../feature/dashboard/pages/MainDashboard";
+import { Appointments } from "../../feature/appointments/pages/Appointments";
+import { Patients } from "../../feature/patients/pages/Patients";
+import { Doctors } from "../../feature/doctors/pages/Doctor";
+import { MedicalRecords } from "../../Pages/MedicalRecords";
 
-import { Attendance } from "../Pages/AttendancePage/Attendance";
-import { ProjectDirectorDashboard } from "../Pages/ProjectDirector/ProjectDirectorDashboard";
+import { Attendance } from "../../Pages/AttendancePage/Attendance";
+import { ProjectDirectorDashboard } from "../../Pages/ProjectDirector/ProjectDirectorDashboard";
 
-import { AnchorageKarachiGallery } from "../components/AnchorageKarachiGallery";
-import { PAOPALManagement } from "../components/PAOPALManagement";
-import { NDCNOCRecords } from "../components/NDCNOCRecords";
-import { EstateAgents } from "../components/EstateAgents";
-import { EmployeeLeaveManagement } from "../components/EmployeeLeaveManagement";
-import { ConstructionProjects } from "../components/ConstructionProjects";
-import { Reports } from "../components/Reports";
-import { Chatbot } from "../components/Chatbot";
-import { Settings } from "../components/Settings";
+import { AnchorageKarachiGallery } from "../../components/AnchorageKarachiGallery";
+import { PAOPALManagement } from "../../components/PAOPALManagement";
+import { NDCNOCRecords } from "../../components/NDCNOCRecords";
+import { EstateAgents } from "../../components/EstateAgents";
+import { EmployeeLeaveManagement } from "../../components/EmployeeLeaveManagement";
+import { ConstructionProjects } from "../../components/ConstructionProjects";
+import { Reports } from "../../components/Reports";
+import { Chatbot } from "../../components/Chatbot";
+import { Settings } from "../../components/Settings";
 
 export function AppRoutes({ user, onLogin, onLogout }) {
 

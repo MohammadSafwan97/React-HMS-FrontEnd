@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Select from "react-select";
-import { createAppointment, updateAppointment } from "../../services/appointmentService";
+import { createAppointment, updateAppointment } from "../services/appointmentService";
 
 const STATUSES = ["SCHEDULED", "COMPLETED", "CANCELLED"];
 
@@ -37,9 +37,11 @@ export function AppointmentModal({
       status: form.status,
       remarks: form.remarks,
     };
+    console.log(payload)
 
     if (mode === "add") {
       const res = await createAppointment(payload);
+      console.log(res.data)
       setAppointments([...appointments, res.data]);
     }
 

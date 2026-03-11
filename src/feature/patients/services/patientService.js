@@ -11,7 +11,7 @@ const res=await axios.get(`${API_BASE_URL}/${id}`);
 return res.data;
 }
 
-export const createPatient=async(patient)=>{
+export const createPatient =async(patient)=>{
 const res=await axios.post(API_BASE_URL,patient);
 return res.data;
 }

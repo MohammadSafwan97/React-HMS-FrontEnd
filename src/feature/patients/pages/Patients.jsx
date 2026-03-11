@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 
 import { getAllPatients, createPatient, updatePatient } from "../services/patientService.js";
 
-import PatientHeader from "../components/patients/PatientHeader.jsx";
-import PatientSearch from "../components/patients/PatientSearch.jsx";
-import PatientCard from "../components/patients/PatientCard.jsx";
-import PatientModal from "../components/patients/PatientModal.jsx";
-import PatientReportModal from "../components/patients/PatientReportModal.jsx";
+import PatientHeader from "../components/PatientHeader.jsx";
+import PatientSearch from "../components/PatientSearch.jsx";
+import PatientCard from "../components/PatientCard.jsx";
+import PatientModal from "../components/PatientModal.jsx";
+import PatientReportModal from "../components/PatientReportModal.jsx";
 
-import { notifySuccess, notifyError } from "../utils/notification";
+import { notifySuccess, notifyError } from "../../../shared/utils/notification.js";
 
 export function Patients() {
 
