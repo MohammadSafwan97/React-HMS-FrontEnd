@@ -36,13 +36,17 @@ export function Doctors() {
 
   const filteredDoctors = doctors.filter((doctor) => {
 
-    return (
-      doctor.name.toLowerCase().includes(search.toLowerCase()) ||
-      doctor.specialization.toLowerCase().includes(search.toLowerCase()) ||
-      doctor.id.toString().includes(search)
-    );
+  const name = doctor.name || "";
+  const specialization = doctor.specialization || "";
+  const id = doctor.id ? doctor.id.toString() : "";
 
-  });
+  return (
+    name.toLowerCase().includes(search.toLowerCase()) ||
+    specialization.toLowerCase().includes(search.toLowerCase()) ||
+    id.includes(search)
+  );
+
+});
 
   /* ---------------- HANDLERS ---------------- */
 

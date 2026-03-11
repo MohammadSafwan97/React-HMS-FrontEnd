@@ -24,7 +24,7 @@ const navItems = [
   { path: '/doctors', icon: Clock, label: 'Doctors' },
   { path: '/attendance', icon: Clock, label: 'Staff Attendance' },
   { path: '/leave-record', icon: CalendarOff, label: 'Staff Leave' },
-  { path: '/transfer-cases', icon: CalendarCheck, label: 'Appointments' },
+  { path: '/appointments', icon: CalendarCheck, label: 'Appointments' },
   { path: '/medical-records', icon: FileText, label: 'Medical Records' },
   { path: '/ndc-noc-records', icon: ShieldCheck, label: 'Compliance Records' },
   { path: '/estate-agents', icon: Stethoscope, label: 'Doctors' },

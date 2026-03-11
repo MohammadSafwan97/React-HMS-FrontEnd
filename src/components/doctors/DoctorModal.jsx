@@ -7,12 +7,12 @@ export default function DoctorModal({
 }) {
 
   const fields = [
-    
-    ["name", "Doctor Name"],
-    ["specialization", "Specialization"],
-    ["department", "Department"],
-    ["experience", "Experience"],
-    ["phone", "Phone"],
+    ["name", "Doctor Name", "text"],
+    ["email", "Email", "email"],
+    ["specialization", "Specialization", "text"],
+    ["department", "Department", "text"],
+    ["experience", "Experience (Years)", "number"],
+    ["phone", "Phone", "tel"],
   ];
 
   return (
@@ -27,7 +27,7 @@ export default function DoctorModal({
 
         <div className="grid grid-cols-2 gap-4">
 
-          {fields.map(([name, label]) => (
+          {fields.map(([name, label, type]) => (
 
             <div key={name} className="flex flex-col gap-1">
 
@@ -36,6 +36,8 @@ export default function DoctorModal({
               </label>
 
               <input
+                type={type}
+                required
                 name={name}
                 value={formData[name] || ""}
                 onChange={onChange}
@@ -69,6 +71,5 @@ export default function DoctorModal({
       </div>
 
     </div>
-
   );
 }

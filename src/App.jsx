@@ -7,7 +7,7 @@ import { LoginPage } from './components/LoginPage';
 import { DashboardLayout } from './components/SideDashboardLayout/DashboardLayout';
 import { ProjectDirectorDashboard } from './Pages/ProjectDirector/ProjectDirectorDashboard';
 import { MainDashboard } from './components/MainDashboardPage/MainDashboard';
-import { TransferCases } from './components/TransferCasePage/TransferCases';
+import { Appointments } from './Pages/Appointments';
 import { AnchorageKarachiGallery } from './components/AnchorageKarachiGallery';
 import { PALManagement } from './components/PALManagement';
 import { PAOPALManagement } from './components/PAOPALManagement';
@@ -81,7 +81,7 @@ export default function App() {
           <Route path="dashboard" element={<MainDashboard />} />
 
           {/* ROLE BASED */}
-          <Route path="transfer-cases" element={<TransferCases />} />
+          <Route path="appointments" element={<Appointments />} />
           <Route path="patients" element={<Patients />} />
           <Route path="doctors" element={<Doctors />} />
           <Route path="leave-record" element={<EmployeeLeaveManagement />} />

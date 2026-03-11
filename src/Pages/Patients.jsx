@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { tabCategoryMap } from "../utils/patients/helper.js";
 import { getAllPatients, createPatient, updatePatient } from "../services/patientService.js";
 
 import PatientHeader from "../components/patients/PatientHeader.jsx";
@@ -9,13 +8,20 @@ import PatientCard from "../components/patients/PatientCard.jsx";
 import PatientModal from "../components/patients/PatientModal.jsx";
 import PatientReportModal from "../components/patients/PatientReportModal.jsx";
 
+import { notifySuccess, notifyError } from "../utils/notification";
+
 export function Patients() {
 
   /* ---------------- STATE ---------------- */
 
   const [patients, setPatients] = useState([]);
-  const [activeTab, setActiveTab] = useState("inpatient");
+
+  const [activeTab, setActiveTab] = useState("INPATIENT");
+
   const [search, setSearch] = useState("");
+
+  const [bloodFilter, setBloodFilter] = useState("");
+  const [genderFilter, setGenderFilter] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [showReport, setShowReport] = useState(false);
@@ -29,16 +35,27 @@ export function Patients() {
   /* ---------------- LOAD PATIENTS ---------------- */
 
   const loadPatients = async () => {
+
     try {
+
       setLoading(true);
+
       const data = await getAllPatients();
+
       setPatients(data || []);
+
     } catch (err) {
+
       console.error("Failed to load patients:", err);
+
       setError("Failed to load patients.");
+
     } finally {
+
       setLoading(false);
+
     }
+
   };
 
   useEffect(() => {
@@ -50,43 +67,88 @@ export function Patients() {
   const filteredPatients = patients.filter((patient) => {
 
     const matchesTab =
-      tabCategoryMap[activeTab]?.includes(patient.patientType);
+      activeTab === "ALL" ||
+      patient.patientType === activeTab;
+
+    const matchesBlood =
+      !bloodFilter ||
+      patient.bloodGroupType === bloodFilter;
+
+    const matchesGender =
+      !genderFilter ||
+      patient.gender === genderFilter;
 
     const matchesSearch =
-      (patient.name || "").toLowerCase().includes(search.toLowerCase()) ||
-      (patient.ward || "").toLowerCase().includes(search.toLowerCase()) ||
-      (patient.patientId || "").toLowerCase().includes(search.toLowerCase());
 
-    return matchesTab && matchesSearch;
+      (patient.name || "")
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+
+      (patient.patientId || "")
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+
+      (patient.phoneNumber || "")
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+
+      (patient.email || "")
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+    return (
+      matchesTab &&
+      matchesBlood &&
+      matchesGender &&
+      matchesSearch
+    );
+
   });
 
   /* ---------------- GROUPING FOR REPORT ---------------- */
 
   const grouped = {
-    inpatient: patients.filter((p) => p.patientType === "Inpatient"),
-    outpatient: patients.filter((p) => p.patientType === "Outpatient"),
-    emergency: patients.filter((p) => p.patientType === "Emergency"),
+
+    inpatient: patients.filter((p) => p.patientType === "INPATIENT"),
+
+    outpatient: patients.filter((p) => p.patientType === "OUTPATIENT"),
+
+    emergency: patients.filter((p) => p.patientType === "EMERGENCY"),
+
   };
 
   /* ---------------- HANDLERS ---------------- */
 
   const openAdd = () => {
+
     setMode("add");
+
     setFormData({});
+
     setShowModal(true);
+
   };
 
   const openEdit = (patient) => {
+
     setMode("edit");
+
     setFormData(patient);
+
     setShowModal(true);
+
   };
 
   const handleChange = (e) => {
+
     setFormData({
+
       ...formData,
+
       [e.target.name]: e.target.value,
+
     });
+
   };
 
   const handleSave = async () => {
@@ -96,7 +158,7 @@ export function Patients() {
       if (mode === "edit") {
 
         const updatedPatient = await updatePatient(
-          formData.patientId,
+          formData.id,
           formData
         );
 
@@ -108,6 +170,8 @@ export function Patients() {
           )
         );
 
+        notifySuccess("Patient updated successfully");
+
       } else {
 
         const newPatient = await createPatient(formData);
@@ -116,6 +180,9 @@ export function Patients() {
           ...prev,
           newPatient
         ]);
+
+        notifySuccess("Patient created successfully");
+
       }
 
       setShowModal(false);
@@ -123,14 +190,17 @@ export function Patients() {
     } catch (err) {
 
       console.error("Failed to save patient:", err);
-      alert("Failed to save patient. Please try again.");
+
+      notifyError("Failed to save patient");
 
     }
+
   };
 
   /* ---------------- RENDER ---------------- */
 
   return (
+
     <div className="p-8 text-slate-900 space-y-10">
 
       <PatientHeader
@@ -138,35 +208,75 @@ export function Patients() {
         onReport={() => setShowReport(true)}
       />
 
-      {/* Tabs */}
+      {/* ---------------- TABS ---------------- */}
 
       <div className="flex gap-2">
 
-        {[
-          ["inpatient", "Inpatients"],
-          ["outpatient", "Outpatients"],
-          ["emergency", "Emergency Patients"],
-        ].map(([key, label]) => (
+        {["INPATIENT", "OUTPATIENT", "EMERGENCY"].map((type) => (
 
           <button
-            key={key}
-            onClick={() => setActiveTab(key)}
+            key={type}
+            onClick={() => setActiveTab(type)}
             className={`px-4 py-2 rounded-lg ${
-              activeTab === key
+              activeTab === type
                 ? "bg-blue-900 text-white"
                 : "border"
             }`}
           >
-            {label}
+            {type}
           </button>
 
         ))}
 
       </div>
 
-      <PatientSearch value={search} onChange={setSearch} />
+      {/* ---------------- SEARCH ---------------- */}
 
-      {/* Loading */}
+      <PatientSearch
+        value={search}
+        onChange={setSearch}
+      />
+
+      {/* ---------------- EXTRA FILTERS ---------------- */}
+
+      <div className="flex gap-4">
+
+        <select
+          value={bloodFilter}
+          onChange={(e) => setBloodFilter(e.target.value)}
+          className="border px-3 py-2 rounded-lg"
+        >
+
+          <option value="">All Blood Groups</option>
+
+          <option value="A_POSITIVE">A+</option>
+          <option value="A_NEGATIVE">A-</option>
+          <option value="B_POSITIVE">B+</option>
+          <option value="B_NEGATIVE">B-</option>
+          <option value="AB_POSITIVE">AB+</option>
+          <option value="AB_NEGATIVE">AB-</option>
+          <option value="O_POSITIVE">O+</option>
+          <option value="O_NEGATIVE">O-</option>
+
+        </select>
+
+        <select
+          value={genderFilter}
+          onChange={(e) => setGenderFilter(e.target.value)}
+          className="border px-3 py-2 rounded-lg"
+        >
+
+          <option value="">All Genders</option>
+
+          <option value="MALE">Male</option>
+          <option value="FEMALE">Female</option>
+          <option value="OTHER">Other</option>
+
+        </select>
+
+      </div>
+
+      {/* ---------------- LOADING ---------------- */}
 
       {loading && (
         <div className="text-center text-gray-500">
@@ -174,7 +284,7 @@ export function Patients() {
         </div>
       )}
 
-      {/* Error */}
+      {/* ---------------- ERROR ---------------- */}
 
       {error && (
         <div className="text-center text-red-500">
@@ -182,9 +292,10 @@ export function Patients() {
         </div>
       )}
 
-      {/* Patient Grid */}
+      {/* ---------------- PATIENT GRID ---------------- */}
 
       {!loading && !error && (
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
           {filteredPatients.map((patient) => (
@@ -198,29 +309,37 @@ export function Patients() {
           ))}
 
         </div>
+
       )}
 
-      {/* Patient Modal */}
+      {/* ---------------- PATIENT MODAL ---------------- */}
 
       {showModal && (
+
         <PatientModal
+          mode={mode}
+          formData={formData}
           onChange={handleChange}
           onSave={handleSave}
-          formData={formData}
           onClose={() => setShowModal(false)}
         />
+
       )}
 
-      {/* Report Modal */}
+      {/* ---------------- REPORT MODAL ---------------- */}
 
       {showReport && (
+
         <PatientReportModal
           patients={patients}
           grouped={grouped}
           onClose={() => setShowReport(false)}
         />
+
       )}
 
     </div>
+
   );
+
 }
