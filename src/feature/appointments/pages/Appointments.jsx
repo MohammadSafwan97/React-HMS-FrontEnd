@@ -8,6 +8,7 @@ import { AppointmentTable } from "../components/AppointmentTable";
 import { AppointmentModal } from "../components/AppointmentModal";
 
 export function Appointments() {
+
   const [appointments, setAppointments] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [patients, setPatients] = useState([]);
@@ -22,26 +23,35 @@ export function Appointments() {
   }, []);
 
   const loadData = async () => {
-    const appts = await getAppointments();
-    const docs = await getAllDoctors();
-    const pats = await getAllPatients();
 
-    console.log(appts,docs,pats)
-    setAppointments(appts || []);
-    setDoctors(docs || []);
-    setPatients(pats || []);
+    try {
+
+      const appts = await getAppointments();
+      const docs = await getAllDoctors();
+      const pats = await getAllPatients();
+
+      setAppointments(appts || []);
+      setDoctors(docs || []);
+      setPatients(pats || []);
+
+    } catch (err) {
+      console.error("Failed loading data", err);
+    }
   };
 
-  const filteredAppointments = appointments.filter((a) => {
+  const filteredAppointments = (appointments || []).filter((a) => {
+
+    if (!a) return false;
+
     const q = search.toLowerCase();
 
-    const patient = patients.find((p) => p.id === a.patientId);
-    const doctor = doctors.find((d) => d.id === a.doctorId);
+    const patient = patients.find((p) => p.id === a?.patientId);
+    const doctor = doctors.find((d) => d.id === a?.doctorId);
 
     return (
-      a.id?.toString().includes(q) ||
-      patient?.name?.toLowerCase().includes(q) ||
-      doctor?.name?.toLowerCase().includes(q)
+      a?.id?.toString().includes(q) ||
+      patient?.name?.toLowerCase()?.includes(q) ||
+      doctor?.name?.toLowerCase()?.includes(q)
     );
   });
 
@@ -68,7 +78,7 @@ export function Appointments() {
       />
 
       <AppointmentTable
-        appointments={appointments}
+        appointments={filteredAppointments}
         patients={patients}
         doctors={doctors}
         openModal={openModal}
