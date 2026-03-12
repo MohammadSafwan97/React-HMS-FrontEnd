@@ -27,6 +27,8 @@ export function Appointments() {
     loadData();
   }, []);
 
+  /* ---------------- LOAD DATA ---------------- */
+
   const loadData = async () => {
 
     try {
@@ -50,6 +52,8 @@ export function Appointments() {
 
   };
 
+  /* ---------------- FILTER ---------------- */
+
   const filteredAppointments = (appointments || []).filter((a) => {
 
     if (!a) return false;
@@ -67,26 +71,37 @@ export function Appointments() {
 
   });
 
+  /* ---------------- MODAL HANDLERS ---------------- */
+
   const openModal = (appointment, type) => {
+
     setSelectedAppointment(appointment);
     setMode(type);
+
   };
 
   const openAddAppointment = () => {
+
     setSelectedAppointment({});
     setMode("add");
+
   };
+
+  /* ---------------- DELETE HANDLER ---------------- */
 
   const confirmDelete = async () => {
 
     const id = deleteId;
+
     if (!id) return;
 
     const previous = [...appointments];
 
     try {
 
+      // Optimistic UI
       setAppointments(prev => prev.filter(a => a.id !== id));
+
       setShowDeleteConfirm(false);
 
       await deleteAppointment(id);
@@ -95,7 +110,10 @@ export function Appointments() {
 
     } catch (err) {
 
+      console.error("Delete failed", err);
+
       setAppointments(previous);
+
       notifyError("Failed to delete appointment");
 
     } finally {
@@ -143,6 +161,8 @@ export function Appointments() {
 
       )}
 
+      {/* DELETE CONFIRMATION MODAL */}
+
       {showDeleteConfirm && (
 
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -182,5 +202,6 @@ export function Appointments() {
       )}
 
     </div>
+
   );
 }
