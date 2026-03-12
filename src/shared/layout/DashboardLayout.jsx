@@ -6,11 +6,11 @@ import {
   Stethoscope,
   Clock,
   CalendarCheck,
-  CalendarOff,
+ 
   FileText,
-  ShieldCheck,
+  
   Building2,
-  BarChart3,
+  
   Settings as SettingsIcon,
   MessageCircle,
   LogOut,
@@ -25,7 +25,7 @@ const navItems = [
   { path: '/appointments', icon: CalendarCheck, label: 'Appointments' },
   { path: '/attendance', icon: Clock, label: 'Staff Attendance' },
   { path: '/medical-records', icon: FileText, label: 'Medical Records' },
-  { path: '/construction-projects', icon: Building2, label: 'Departments' },
+  { path: '/prescriptions', icon: FileText, label: 'Prescriptions' },
   { path: '/chatbot', icon: MessageCircle, label: 'Help Assistant' },
   { path: '/project-director', icon: User, label: 'Hospital Director' },
 ];
