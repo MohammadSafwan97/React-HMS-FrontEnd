@@ -1,6 +1,6 @@
-import { User, Edit, Phone, Mail } from "lucide-react";
+import { User, Edit, Phone, Mail, Trash2 } from "lucide-react";
 
-export default function PatientCard({ patient, onEdit }) {
+export default function PatientCard({ patient, onEdit, onDelete }) {
 
   if (!patient) return null;
 
@@ -12,9 +12,19 @@ export default function PatientCard({ patient, onEdit }) {
 
         <User className="w-8 h-8 text-blue-900" />
 
-        <button onClick={() => onEdit(patient)}>
-          <Edit className="w-4 h-4 text-slate-600 hover:text-blue-900" />
-        </button>
+        <div className="flex gap-2">
+
+          <button onClick={() => onEdit(patient)}>
+            <Edit className="w-4 h-4 text-slate-600 hover:text-blue-900" />
+          </button>
+
+          <button
+            onClick={() => onDelete(patient.id)}
+          >
+            <Trash2 className="w-4 h-4 text-red-600 hover:text-red-800" />
+          </button>
+
+        </div>
 
       </div>
 

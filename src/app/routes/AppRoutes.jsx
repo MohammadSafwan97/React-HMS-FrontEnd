@@ -10,20 +10,10 @@ import { MainDashboard } from "../../feature/dashboard/pages/MainDashboard";
 import { Appointments } from "../../feature/appointments/pages/Appointments";
 import { Patients } from "../../feature/patients/pages/Patients";
 import { Doctors } from "../../feature/doctors/pages/Doctor";
-import { MedicalRecords } from "../../feature/medicalrecords/Pages/MedicalRecords";
-
-import { Attendance } from "../../Pages/AttendancePage/Attendance";
-import { ProjectDirectorDashboard } from "../../Pages/ProjectDirector/ProjectDirectorDashboard";
-
-import { AnchorageKarachiGallery } from "../../components/AnchorageKarachiGallery";
-import { Prescriptions } from "../../components/Prescriptions";
-import { NDCNOCRecords } from "../../feature/medicalrecords/Pages/MedicalRecords.jsx";
-import { EstateAgents } from "../../components/EstateAgents";
-import { EmployeeLeaveManagement } from "../../components/EmployeeLeaveManagement";
-import { ConstructionProjects } from "../../components/ConstructionProjects";
-import { Reports } from "../../components/Reports";
+import { MedicalRecords } from "../../feature/medicalrecords/pages/MedicalRecords";
+import { User } from "../../feature/users/pages/User";
+import { Prescriptions } from "../../feature/prescriptions/pages/Prescriptions";
 import { Chatbot } from "../../components/Chatbot";
-import { Settings } from "../../components/Settings";
 
 export function AppRoutes({ user, onLogin, onLogout }) {
 
@@ -56,27 +46,13 @@ export function AppRoutes({ user, onLogin, onLogout }) {
           index
           element={<Navigate to={getDefaultRoute(user)} replace />}
         />
-
         <Route path="dashboard" element={<MainDashboard />} />
-
         <Route path="appointments" element={<Appointments />} />
         <Route path="patients" element={<Patients />} />
         <Route path="doctors" element={<Doctors />} />
-        
-
-        <Route path="leave-record" element={<EmployeeLeaveManagement />} />
-        <Route path="attendance" element={<Attendance />} />
-
-        <Route path="project-director" element={<ProjectDirectorDashboard />} />
-
-        <Route path="property-records" element={<AnchorageKarachiGallery />} />
+        <Route path="users" element={<User />} />
         <Route path="prescriptions" element={<Prescriptions />} />
         <Route path="medical-records" element={<MedicalRecords />} />
-        <Route path="estate-agents" element={<EstateAgents />} />
-        <Route path="construction-projects" element={<ConstructionProjects />} />
-
-        <Route path="reports" element={<Reports />} />
-        <Route path="settings" element={<Settings />} />
         <Route path="chatbot" element={<Chatbot />} />
 
       </Route>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getAllPatients, createPatient, updatePatient } from "../services/patientService.js";
+import { getAllPatients, createPatient, updatePatient ,deletePatient} from "../services/patientService.js";
 
 import PatientHeader from "../components/PatientHeader.jsx";
 import PatientSearch from "../components/PatientSearch.jsx";
@@ -32,6 +32,10 @@ export function Patients() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [deletePatientId, setDeletePatientId] = useState(null);
+const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+
   /* ---------------- LOAD PATIENTS ---------------- */
 
   const loadPatients = async () => {
@@ -62,6 +66,62 @@ export function Patients() {
     loadPatients();
   }, []);
 
+  // -------------------DELETE PATIENT-------------
+
+  const handleDelete = async (id) => {
+  try {
+
+    await deletePatient(id);
+
+    setPatients(prev => prev.filter(p => p.id !== id));
+
+    notifySuccess("Patient deleted successfully");
+
+  } catch (err) {
+
+    console.error("Failed to delete patient:", err);
+
+    notifyError("Failed to delete patient");
+
+  }
+};
+
+const confirmDelete = async () => {
+
+  const id = deletePatientId;
+
+  if (!id) return;
+
+  const previousPatients = [...patients];
+
+  try {
+
+    // Optimistic UI update
+    setPatients(prev => prev.filter(p => p.id !== id));
+
+    setShowDeleteConfirm(false);
+
+    await deletePatient(id);
+
+    notifySuccess("Patient deleted successfully");
+
+  } catch (err) {
+
+    console.error("Delete failed:", err);
+
+    // Rollback
+    setPatients(previousPatients);
+
+    notifyError("Failed to delete patient");
+
+  } finally {
+
+    setDeletePatientId(null);
+
+  }
+
+};
+
   /* ---------------- FILTERING ---------------- */
 
   const filteredPatients = patients.filter((patient) => {
@@ -84,7 +144,7 @@ export function Patients() {
         .toLowerCase()
         .includes(search.toLowerCase()) ||
 
-      (patient.patientId || "")
+      (patient.id|| "")
         .toLowerCase()
         .includes(search.toLowerCase()) ||
 
@@ -162,13 +222,13 @@ export function Patients() {
           formData
         );
 
-        setPatients((prev) =>
-          prev.map((p) =>
-            p.patientId === updatedPatient.patientId
-              ? updatedPatient
-              : p
-          )
-        );
+       setPatients((prev) =>
+  prev.map((p) =>
+    p.id === updatedPatient.id
+      ? updatedPatient
+      : p
+  )
+);
 
         notifySuccess("Patient updated successfully");
 
@@ -300,11 +360,16 @@ export function Patients() {
 
           {filteredPatients.map((patient) => (
 
-            <PatientCard
-              key={patient.patientId}
-              patient={patient}
-              onEdit={openEdit}
-            />
+<PatientCard
+  key={patient.id}
+  patient={patient}
+  onEdit={openEdit}
+  onDelete={(id) => {
+    setDeletePatientId(id);
+    setShowDeleteConfirm(true);
+  }}
+/>
+
 
           ))}
 
@@ -338,7 +403,49 @@ export function Patients() {
 
       )}
 
+      {showDeleteConfirm && (
+
+  <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+
+    <div className="bg-white rounded-xl p-6 w-[350px] space-y-4">
+
+      <h3 className="text-lg font-semibold">
+        Delete Patient
+      </h3>
+
+      <p className="text-sm text-gray-600">
+        Are you sure you want to delete this patient?
+        This action cannot be undone.
+      </p>
+
+      <div className="flex justify-end gap-3">
+
+        <button
+          onClick={() => setShowDeleteConfirm(false)}
+          className="px-4 py-2 border rounded-lg"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={confirmDelete}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+        >
+          Delete
+        </button>
+
+      </div>
+
     </div>
+
+  </div>
+
+)}
+
+
+    </div>
+
+      
 
   );
 

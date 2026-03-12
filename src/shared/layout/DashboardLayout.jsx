@@ -1,140 +1,201 @@
-import { Outlet, NavLink } from 'react-router';
-import logo from '../../assets/anchorageKarachi.jpg';
+import { Outlet, NavLink } from "react-router";
+import logo from "../../assets/anchorageKarachi.jpg";
+
 import {
   LayoutDashboard,
-  UserPlus,
+  Users,
   Stethoscope,
-  Clock,
   CalendarCheck,
- 
   FileText,
-  
-  Building2,
-  
-  Settings as SettingsIcon,
-  MessageCircle,
+  ClipboardList,
+  UserCog,
   LogOut,
-  User,
-} from 'lucide-react';
-/* ---------------- NAV ITEMS ---------------- */
+  User
+} from "lucide-react";
 
-const navItems = [
-  { path: '/dashboard', icon: LayoutDashboard, label: 'Hospital Dashboard' },
-  { path: '/patients', icon: UserPlus, label: 'Patients' },
-  { path: '/doctors', icon: Clock, label: 'Doctors' },
-  { path: '/appointments', icon: CalendarCheck, label: 'Appointments' },
-  { path: '/attendance', icon: Clock, label: 'Staff Attendance' },
-  { path: '/medical-records', icon: FileText, label: 'Medical Records' },
-  { path: '/prescriptions', icon: FileText, label: 'Prescriptions' },
-  { path: '/chatbot', icon: MessageCircle, label: 'Help Assistant' },
-  { path: '/project-director', icon: User, label: 'Hospital Director' },
+/* ---------------- NAV SECTIONS ---------------- */
+
+const NAV_SECTIONS = [
+  {
+    title: "MAIN",
+    items: [
+      { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    ],
+  },
+
+  {
+    title: "PATIENT CARE",
+    items: [
+      { path: "/patients", icon: Users, label: "Patients" },
+      { path: "/appointments", icon: CalendarCheck, label: "Appointments" },
+      { path: "/medical-records", icon: ClipboardList, label: "Medical Records" },
+      { path: "/prescriptions", icon: FileText, label: "Prescriptions" },
+    ],
+  },
+
+  {
+    title: "ADMINISTRATION",
+    items: [
+      { path: "/doctors", icon: Stethoscope, label: "Doctors" },
+      { path: "/users", icon: UserCog, label: "Users" },
+    ],
+  },
 ];
 
-/* ---------------- ROLE → NAV MAP ---------------- */
+/* ---------------- ROLE ACCESS ---------------- */
 
 const NAV_BY_ROLE = {
-  admin: navItems.map(i => i.path), // full access
-
-  transfer: navItems
-    .map(i => i.path)
-    .filter(
-      path =>
-        path !== '/employees' &&
-        path !== '/attendance' &&
-        path !== '/project-director' &&
-        path !== '/settings'
-    ),
-
-  employee: ['/employees', '/attendance','/leave-record'],
-
-  director: ['/project-director'],
+  admin: NAV_SECTIONS.flatMap(section => section.items.map(i => i.path)),
+  doctor: [
+    "/dashboard",
+    "/patients",
+    "/appointments",
+    "/medical-records",
+    "/prescriptions",
+  ],
+  receptionist: [
+    "/dashboard",
+    "/patients",
+    "/appointments",
+  ],
 };
-
-
 
 /* ---------------- COMPONENT ---------------- */
 
 export function DashboardLayout({ user, onLogout }) {
-  // 🛡 SAFETY GUARD
-  if (!user || !user.role) {
-    return null; 
-  }
+
+  if (!user || !user.role) return null;
 
   const allowedPaths = NAV_BY_ROLE[user.role] || [];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen flex bg-slate-50">
+
       {/* SIDEBAR */}
+
       <aside className="w-64 bg-gradient-to-b from-blue-900 to-blue-950 text-white flex flex-col">
-        
+
         {/* LOGO */}
+
         <div className="p-6 border-b border-blue-800">
           <div className="flex items-center gap-3">
+
             <img
               src={logo}
-              alt="Hospital Management"
-              className="w-16 h-16 rounded-full"
+              alt="Hospital"
+              className="w-14 h-14 rounded-full"
             />
-            <div className="text-sm opacity-90">Hospital Management</div>
+
+            <div>
+              <div className="font-semibold">
+                CityCare Hospital
+              </div>
+
+              <div className="text-xs text-blue-300">
+                Management System
+              </div>
+            </div>
+
           </div>
         </div>
 
         {/* NAVIGATION */}
-        <nav className="flex-1 px-3 py-6 overflow-y-auto">
-          <div className="space-y-1">
-            {navItems
-              .filter(item => allowedPaths.includes(item.path))
-              .map(item => {
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                        isActive
-                          ? 'bg-white/10 text-white shadow-lg'
-                          : 'text-blue-200 hover:bg-white/5 hover:text-white'
-                      }`
-                    }
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span className="text-sm">{item.label}</span>
-                  </NavLink>
-                );
-              })}
-          </div>
+
+        <nav className="flex-1 overflow-y-auto px-3 py-5">
+
+          {NAV_SECTIONS.map(section => {
+
+            const visibleItems = section.items.filter(
+              item => allowedPaths.includes(item.path)
+            );
+
+            if (!visibleItems.length) return null;
+
+            return (
+
+              <div key={section.title} className="mb-6">
+
+                <div className="text-xs text-blue-300 uppercase px-3 mb-2">
+                  {section.title}
+                </div>
+
+                <div className="space-y-1">
+
+                  {visibleItems.map(item => {
+
+                    const Icon = item.icon;
+
+                    return (
+                      <NavLink
+                        key={item.path}
+                        to={item.path}
+                        className={({ isActive }) =>
+                          `flex items-center gap-3 px-4 py-3 rounded-lg transition ${
+                            isActive
+                              ? "bg-white/10 shadow-md"
+                              : "text-blue-200 hover:bg-white/5 hover:text-white"
+                          }`
+                        }
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span className="text-sm">{item.label}</span>
+                      </NavLink>
+                    );
+                  })}
+
+                </div>
+
+              </div>
+
+            );
+
+          })}
+
         </nav>
 
         {/* USER PROFILE */}
+
         <div className="p-4 border-t border-blue-800">
+
           <div className="flex items-center gap-3 mb-3">
+
             <div className="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center">
               <User className="w-5 h-5" />
             </div>
+
             <div className="flex-1">
-              <div className="text-sm">{user.email}</div>
+
+              <div className="text-sm font-medium">
+                {user.email}
+              </div>
+
               <div className="text-xs text-blue-300 capitalize">
                 {user.role}
               </div>
+
             </div>
+
           </div>
 
           <button
             onClick={onLogout}
             className="w-full flex items-center justify-center gap-2 px-4 py-2 
-                       bg-white/10 hover:bg-white/20 rounded-lg transition-all text-sm"
+                       bg-white/10 hover:bg-white/20 rounded-lg transition text-sm"
           >
             <LogOut className="w-4 h-4" />
-            <span>Logout</span>
+            Logout
           </button>
+
         </div>
+
       </aside>
 
-      
+      {/* MAIN CONTENT */}
+
       <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
+
     </div>
   );
 }

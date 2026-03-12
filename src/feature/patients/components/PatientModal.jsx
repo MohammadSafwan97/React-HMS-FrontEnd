@@ -10,6 +10,8 @@ export default function PatientModal({
 
   const [errors, setErrors] = useState({});
 
+  const today = new Date().toISOString().split("T")[0];
+
   const bloodGroups = [
     "A_POSITIVE",
     "A_NEGATIVE",
@@ -42,17 +44,17 @@ export default function PatientModal({
     if (!formData.name?.trim())
       newErrors.name = "Name is required";
 
-    if (!formData.patientId?.trim())
-      newErrors.patientId = "Patient ID is required";
-
     if (!formData.email?.includes("@"))
       newErrors.email = "Valid email required";
 
     if (!formData.phoneNumber?.match(/^\+?[0-9]{10,15}$/))
       newErrors.phoneNumber = "Invalid phone number";
 
-    if (!formData.dateOfBirth)
+    if (!formData.dateOfBirth) {
       newErrors.dateOfBirth = "Date of birth required";
+    } else if (formData.dateOfBirth > today) {
+      newErrors.dateOfBirth = "Date of birth cannot be in the future";
+    }
 
     if (!formData.gender)
       newErrors.gender = "Gender required";
@@ -89,16 +91,6 @@ export default function PatientModal({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-          {/* Patient ID */}
-
-          <Field
-            label="Patient ID"
-            name="patientId"
-            value={formData.patientId}
-            onChange={onChange}
-            error={errors.patientId}
-          />
-
           {/* Name */}
 
           <Field
@@ -118,6 +110,7 @@ export default function PatientModal({
             value={formData.dateOfBirth}
             onChange={onChange}
             error={errors.dateOfBirth}
+            max={today}
           />
 
           {/* Gender */}
@@ -212,11 +205,21 @@ export default function PatientModal({
   );
 }
 
+
 /* ---------- Reusable Field ---------- */
 
-function Field({ label, name, value, onChange, type = "text", error }) {
+function Field({
+  label,
+  name,
+  value,
+  onChange,
+  type = "text",
+  error,
+  ...rest
+}) {
 
   return (
+
     <div className="flex flex-col gap-1">
 
       <label className="text-sm font-medium text-slate-700">
@@ -228,24 +231,38 @@ function Field({ label, name, value, onChange, type = "text", error }) {
         type={type}
         value={value || ""}
         onChange={onChange}
+        {...rest}
         className={`border px-3 py-2 rounded-lg text-sm ${
           error ? "border-red-500" : ""
         }`}
       />
 
       {error && (
-        <span className="text-red-500 text-xs">{error}</span>
+        <span className="text-red-500 text-xs">
+          {error}
+        </span>
       )}
 
     </div>
+
   );
+
 }
+
 
 /* ---------- Reusable Select ---------- */
 
-function Select({ label, name, options, value, onChange, error }) {
+function Select({
+  label,
+  name,
+  options,
+  value,
+  onChange,
+  error
+}) {
 
   return (
+
     <div className="flex flex-col gap-1">
 
       <label className="text-sm font-medium text-slate-700">
@@ -272,9 +289,13 @@ function Select({ label, name, options, value, onChange, error }) {
       </select>
 
       {error && (
-        <span className="text-red-500 text-xs">{error}</span>
+        <span className="text-red-500 text-xs">
+          {error}
+        </span>
       )}
 
     </div>
+
   );
+
 }
