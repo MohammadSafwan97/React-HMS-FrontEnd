@@ -12,14 +12,10 @@ import { notifySuccess, notifyError } from "../../../shared/utils/notification.j
 
 export function Patients() {
 
-  /* ---------------- STATE ---------------- */
-
   const [patients, setPatients] = useState([]);
-
   const [activeTab, setActiveTab] = useState("INPATIENT");
 
   const [search, setSearch] = useState("");
-
   const [bloodFilter, setBloodFilter] = useState("");
   const [genderFilter, setGenderFilter] = useState("");
 
@@ -33,8 +29,7 @@ export function Patients() {
   const [error, setError] = useState(null);
 
   const [deletePatientId, setDeletePatientId] = useState(null);
-const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   /* ---------------- LOAD PATIENTS ---------------- */
 
@@ -52,6 +47,8 @@ const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
       console.error("Failed to load patients:", err);
 
+      notifyError(err?.message || "Failed to load patients");
+
       setError("Failed to load patients.");
 
     } finally {
@@ -66,61 +63,41 @@ const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     loadPatients();
   }, []);
 
-  // -------------------DELETE PATIENT-------------
+  /* ---------------- DELETE PATIENT ---------------- */
 
-  const handleDelete = async (id) => {
-  try {
+  const confirmDelete = async () => {
 
-    await deletePatient(id);
+    const id = deletePatientId;
 
-    setPatients(prev => prev.filter(p => p.id !== id));
+    if (!id) return;
 
-    notifySuccess("Patient deleted successfully");
+    const previousPatients = [...patients];
 
-  } catch (err) {
+    try {
 
-    console.error("Failed to delete patient:", err);
+      setPatients(prev => prev.filter(p => p.id !== id));
 
-    notifyError("Failed to delete patient");
+      setShowDeleteConfirm(false);
 
-  }
-};
+      await deletePatient(id);
 
-const confirmDelete = async () => {
+      notifySuccess("Patient deleted successfully");
 
-  const id = deletePatientId;
+    } catch (err) {
 
-  if (!id) return;
+      console.error("Delete failed:", err);
 
-  const previousPatients = [...patients];
+      setPatients(previousPatients);
 
-  try {
+      notifyError(err?.message || "Failed to delete patient");
 
-    // Optimistic UI update
-    setPatients(prev => prev.filter(p => p.id !== id));
+    } finally {
 
-    setShowDeleteConfirm(false);
+      setDeletePatientId(null);
 
-    await deletePatient(id);
+    }
 
-    notifySuccess("Patient deleted successfully");
-
-  } catch (err) {
-
-    console.error("Delete failed:", err);
-
-    // Rollback
-    setPatients(previousPatients);
-
-    notifyError("Failed to delete patient");
-
-  } finally {
-
-    setDeletePatientId(null);
-
-  }
-
-};
+  };
 
   /* ---------------- FILTERING ---------------- */
 
@@ -144,7 +121,7 @@ const confirmDelete = async () => {
         .toLowerCase()
         .includes(search.toLowerCase()) ||
 
-      (patient.id|| "")
+      (patient.id || "")
         .toLowerCase()
         .includes(search.toLowerCase()) ||
 
@@ -170,9 +147,7 @@ const confirmDelete = async () => {
   const grouped = {
 
     inpatient: patients.filter((p) => p.patientType === "INPATIENT"),
-
     outpatient: patients.filter((p) => p.patientType === "OUTPATIENT"),
-
     emergency: patients.filter((p) => p.patientType === "EMERGENCY"),
 
   };
@@ -182,9 +157,7 @@ const confirmDelete = async () => {
   const openAdd = () => {
 
     setMode("add");
-
     setFormData({});
-
     setShowModal(true);
 
   };
@@ -192,9 +165,7 @@ const confirmDelete = async () => {
   const openEdit = (patient) => {
 
     setMode("edit");
-
     setFormData(patient);
-
     setShowModal(true);
 
   };
@@ -204,16 +175,57 @@ const confirmDelete = async () => {
     setFormData({
 
       ...formData,
-
       [e.target.name]: e.target.value,
 
     });
 
   };
 
+  /* ---------------- VALIDATION ---------------- */
+
+  const validatePatient = () => {
+
+    if (!formData.name || !formData.name.trim()) {
+      notifyError("Patient name is required");
+      return false;
+    }
+
+    if (!formData.phoneNumber || !formData.phoneNumber.trim()) {
+      notifyError("Phone number is required");
+      return false;
+    }
+
+    if (!formData.email || !formData.email.trim()) {
+      notifyError("Email is required");
+      return false;
+    }
+
+    if (!formData.gender) {
+      notifyError("Please select gender");
+      return false;
+    }
+
+    if (!formData.bloodGroupType) {
+      notifyError("Please select blood group");
+      return false;
+    }
+
+    if (!formData.patientType) {
+      notifyError("Please select patient type");
+      return false;
+    }
+
+    return true;
+
+  };
+
+  /* ---------------- SAVE PATIENT ---------------- */
+
   const handleSave = async () => {
 
     try {
+
+      if (!validatePatient()) return;
 
       if (mode === "edit") {
 
@@ -222,13 +234,13 @@ const confirmDelete = async () => {
           formData
         );
 
-       setPatients((prev) =>
-  prev.map((p) =>
-    p.id === updatedPatient.id
-      ? updatedPatient
-      : p
-  )
-);
+        setPatients((prev) =>
+          prev.map((p) =>
+            p.id === updatedPatient.id
+              ? updatedPatient
+              : p
+          )
+        );
 
         notifySuccess("Patient updated successfully");
 
@@ -251,7 +263,11 @@ const confirmDelete = async () => {
 
       console.error("Failed to save patient:", err);
 
-      notifyError("Failed to save patient");
+      if (typeof err === "string") {
+        notifyError(err);
+      } else {
+        notifyError(err?.message || "Failed to save patient");
+      }
 
     }
 
@@ -336,15 +352,11 @@ const confirmDelete = async () => {
 
       </div>
 
-      {/* ---------------- LOADING ---------------- */}
-
       {loading && (
         <div className="text-center text-gray-500">
           Loading patients...
         </div>
       )}
-
-      {/* ---------------- ERROR ---------------- */}
 
       {error && (
         <div className="text-center text-red-500">
@@ -352,32 +364,27 @@ const confirmDelete = async () => {
         </div>
       )}
 
-      {/* ---------------- PATIENT GRID ---------------- */}
-
       {!loading && !error && (
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
           {filteredPatients.map((patient) => (
 
-<PatientCard
-  key={patient.id}
-  patient={patient}
-  onEdit={openEdit}
-  onDelete={(id) => {
-    setDeletePatientId(id);
-    setShowDeleteConfirm(true);
-  }}
-/>
-
+            <PatientCard
+              key={patient.id}
+              patient={patient}
+              onEdit={openEdit}
+              onDelete={(id) => {
+                setDeletePatientId(id);
+                setShowDeleteConfirm(true);
+              }}
+            />
 
           ))}
 
         </div>
 
       )}
-
-      {/* ---------------- PATIENT MODAL ---------------- */}
 
       {showModal && (
 
@@ -391,8 +398,6 @@ const confirmDelete = async () => {
 
       )}
 
-      {/* ---------------- REPORT MODAL ---------------- */}
-
       {showReport && (
 
         <PatientReportModal
@@ -405,47 +410,44 @@ const confirmDelete = async () => {
 
       {showDeleteConfirm && (
 
-  <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
 
-    <div className="bg-white rounded-xl p-6 w-[350px] space-y-4">
+          <div className="bg-white rounded-xl p-6 w-[350px] space-y-4">
 
-      <h3 className="text-lg font-semibold">
-        Delete Patient
-      </h3>
+            <h3 className="text-lg font-semibold">
+              Delete Patient
+            </h3>
 
-      <p className="text-sm text-gray-600">
-        Are you sure you want to delete this patient?
-        This action cannot be undone.
-      </p>
+            <p className="text-sm text-gray-600">
+              Are you sure you want to delete this patient?
+              This action cannot be undone.
+            </p>
 
-      <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-3">
 
-        <button
-          onClick={() => setShowDeleteConfirm(false)}
-          className="px-4 py-2 border rounded-lg"
-        >
-          Cancel
-        </button>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-4 py-2 border rounded-lg"
+              >
+                Cancel
+              </button>
 
-        <button
-          onClick={confirmDelete}
-          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-        >
-          Delete
-        </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+              >
+                Delete
+              </button>
 
-      </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
 
     </div>
-
-  </div>
-
-)}
-
-
-    </div>
-
-      
 
   );
 

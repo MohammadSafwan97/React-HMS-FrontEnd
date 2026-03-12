@@ -1,24 +1,63 @@
 import axios from "axios";
 
-const API_BASE_URL="http://localhost:8080/api/doctors"
+const API_BASE_URL = "http://localhost:8080/api/doctors";
 
-export const createDoctor=async(doctor)=>{
-const res=await axios.post(API_BASE_URL,doctor);
-return res.data;
-}
+export const createDoctor = async (doctor) => {
 
-export const getAllDoctors=async()=>{
-const res=await axios.get(API_BASE_URL);
-return res.data;
-}
+  try {
 
-export const updateDoctor=async(id,patient)=>{
-    const res=await axios.put(`${API_BASE_URL}/${id}`,patient)
+    const res = await axios.post(API_BASE_URL, doctor);
     return res.data;
 
-}
+  } catch (error) {
 
-export const deleteDoctor=async(id)=>{
-    const res=await axios.delete(`${API_BASE_URL}/${id}`);
+    throw error?.response?.data?.message || "Failed to create doctor";
+
+  }
+
+};
+
+export const getAllDoctors = async () => {
+
+  try {
+
+    const res = await axios.get(API_BASE_URL);
     return res.data;
-}
+
+  } catch (error) {
+
+    throw error?.response?.data?.message || "Failed to fetch doctors";
+
+  }
+
+};
+
+export const updateDoctor = async (id, doctor) => {
+
+  try {
+
+    const res = await axios.put(`${API_BASE_URL}/${id}`, doctor);
+    return res.data;
+
+  } catch (error) {
+
+    throw error?.response?.data?.message || "Failed to update doctor";
+
+  }
+
+};
+
+export const deleteDoctor = async (id) => {
+
+  try {
+
+    const res = await axios.delete(`${API_BASE_URL}/${id}`);
+    return res.data;
+
+  } catch (error) {
+
+    throw error?.response?.data?.message || "Failed to delete doctor";
+
+  }
+
+};

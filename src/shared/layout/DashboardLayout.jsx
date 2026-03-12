@@ -28,8 +28,8 @@ const NAV_SECTIONS = [
     items: [
       { path: "/patients", icon: Users, label: "Patients" },
       { path: "/appointments", icon: CalendarCheck, label: "Appointments" },
-      { path: "/medical-records", icon: ClipboardList, label: "Medical Records" },
       { path: "/prescriptions", icon: FileText, label: "Prescriptions" },
+      { path: "/medical-records", icon: ClipboardList, label: "Medical Records" },
     ],
   },
 

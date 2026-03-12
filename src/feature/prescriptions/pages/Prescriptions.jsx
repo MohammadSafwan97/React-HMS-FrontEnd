@@ -41,7 +41,6 @@ export function Prescriptions() {
   }, []);
 
   const loadData = async () => {
-
     try {
 
       const pres = await getPrescriptions();
@@ -49,7 +48,7 @@ export function Prescriptions() {
       const docs = await getAllDoctors();
       const appts = await getAppointments();
 
-      setPrescriptions(pres.data || []);
+      setPrescriptions(pres || []);
       setPatients(pats || []);
       setDoctors(docs || []);
       setAppointments(appts || []);
@@ -60,7 +59,6 @@ export function Prescriptions() {
       notifyError("Failed to load prescriptions");
 
     }
-
   };
 
   const openModal = (prescription, type) => {
@@ -91,7 +89,6 @@ export function Prescriptions() {
       });
 
     }
-
   };
 
   const handleChange = (field, value) => {
@@ -107,7 +104,6 @@ export function Prescriptions() {
       ...prev,
       items: updated
     }));
-
   };
 
   const addMedicineRow = () => {
@@ -134,6 +130,31 @@ export function Prescriptions() {
 
     try {
 
+      if (!form.patientId) {
+        notifyError("Please select a patient");
+        return;
+      }
+
+      if (!form.doctorId) {
+        notifyError("Please select a doctor");
+        return;
+      }
+
+      if (!form.appointmentId) {
+        notifyError("Please select an appointment");
+        return;
+      }
+
+      if (!form.diagnosis.trim()) {
+        notifyError("Diagnosis cannot be empty");
+        return;
+      }
+
+      if (form.items.length === 0) {
+        notifyError("Add at least one medicine");
+        return;
+      }
+
       const payload = {
         diagnosis: form.diagnosis,
         patientId: form.patientId,
@@ -141,17 +162,25 @@ export function Prescriptions() {
         appointmentId: form.appointmentId
       };
 
-      let res;
+      let createdPrescription;
 
       if (mode === "edit") {
-        res = await updatePrescription(form.id, payload);
+        createdPrescription = await updatePrescription(form.id, payload);
       } else {
-        res = await createPrescription(payload);
+        createdPrescription = await createPrescription(payload);
       }
 
-      const createdPrescription = res.data;
+      if (!createdPrescription || !createdPrescription.id) {
+        notifyError("Server did not return prescription ID");
+        return;
+      }
 
       for (const item of form.items) {
+
+        if (!item.medicine.trim()) {
+          notifyError("Medicine name cannot be empty");
+          return;
+        }
 
         await createPrescriptionItem({
           medicine: item.medicine,
@@ -171,7 +200,12 @@ export function Prescriptions() {
     } catch (error) {
 
       console.error(error);
-      notifyError("Failed to save prescription");
+
+      if (typeof error === "string") {
+        notifyError(error);
+      } else {
+        notifyError(error?.message || "Unexpected error occurred");
+      }
 
     }
 
