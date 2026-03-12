@@ -2,10 +2,24 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import { Eye, Edit, Plus, Printer, Trash2 } from "lucide-react";
 
+import { getAllPatients } from "../../patients/services/patientService";
+import { getAllDoctors } from "../../doctors/services/doctorService";
+import { getAppointments } from "../../appointments/services/appointmentService";
+
+import {
+  getPrescriptions,
+  createPrescription,
+  updatePrescription,
+  deletePrescription
+} from "../services/prescriptionService";
+
+import { createPrescriptionItem } from "../services/prescriptionItemService";
+
+import { notifySuccess, notifyError } from "../../../shared/utils/notification";
+
 export function Prescriptions() {
 
   const [prescriptions, setPrescriptions] = useState([]);
-
   const [patients, setPatients] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
@@ -14,6 +28,7 @@ export function Prescriptions() {
   const [mode, setMode] = useState(null);
 
   const [form, setForm] = useState({
+    id: null,
     diagnosis: "",
     patientId: null,
     doctorId: null,
@@ -22,38 +37,30 @@ export function Prescriptions() {
   });
 
   useEffect(() => {
-    loadDummyData();
+    loadData();
   }, []);
 
-  const loadDummyData = () => {
+  const loadData = async () => {
 
-    setPatients([
-      { id: 1, name: "Ali Khan" },
-      { id: 2, name: "Sara Ahmed" }
-    ]);
+    try {
 
-    setDoctors([
-      { id: 1, name: "Dr John" },
-      { id: 2, name: "Dr Smith" }
-    ]);
+      const pres = await getPrescriptions();
+      const pats = await getAllPatients();
+      const docs = await getAllDoctors();
+      const appts = await getAppointments();
 
-    setAppointments([
-      { id: 1 },
-      { id: 2 }
-    ]);
+      setPrescriptions(pres.data || []);
+      setPatients(pats || []);
+      setDoctors(docs || []);
+      setAppointments(appts || []);
 
-    setPrescriptions([
-      {
-        id: 1,
-        diagnosis: "Flu",
-        patient: { id: 1 },
-        doctor: { id: 1 },
-        items: [
-          { medicine: "Paracetamol", dosage: "500mg", instruction: "Twice daily" },
-          { medicine: "Vitamin C", dosage: "1000mg", instruction: "After meal" }
-        ]
-      }
-    ]);
+    } catch (error) {
+
+      console.error(error);
+      notifyError("Failed to load prescriptions");
+
+    }
+
   };
 
   const openModal = (prescription, type) => {
@@ -66,15 +73,16 @@ export function Prescriptions() {
       setForm({
         id: prescription.id,
         diagnosis: prescription.diagnosis,
-        patientId: prescription.patient?.id,
-        doctorId: prescription.doctor?.id,
-        appointmentId: prescription.appointment?.id,
-        items: prescription.items
+        patientId: prescription.patientId,
+        doctorId: prescription.doctorId,
+        appointmentId: prescription.appointmentId,
+        items: prescription.items || [{ medicine: "", dosage: "", instruction: "" }]
       });
 
     } else {
 
       setForm({
+        id: null,
         diagnosis: "",
         patientId: null,
         doctorId: null,
@@ -83,6 +91,7 @@ export function Prescriptions() {
       });
 
     }
+
   };
 
   const handleChange = (field, value) => {
@@ -98,6 +107,7 @@ export function Prescriptions() {
       ...prev,
       items: updated
     }));
+
   };
 
   const addMedicineRow = () => {
@@ -120,42 +130,129 @@ export function Prescriptions() {
 
   };
 
-  const savePrescription = () => {
+  const savePrescription = async () => {
 
-    console.log("Prescription Payload:", form);
+    try {
 
-    setIsModalOpen(false);
+      const payload = {
+        diagnosis: form.diagnosis,
+        patientId: form.patientId,
+        doctorId: form.doctorId,
+        appointmentId: form.appointmentId
+      };
+
+      let res;
+
+      if (mode === "edit") {
+        res = await updatePrescription(form.id, payload);
+      } else {
+        res = await createPrescription(payload);
+      }
+
+      const createdPrescription = res.data;
+
+      for (const item of form.items) {
+
+        await createPrescriptionItem({
+          medicine: item.medicine,
+          dosage: item.dosage,
+          instruction: item.instruction,
+          prescriptionId: createdPrescription.id
+        });
+
+      }
+
+      notifySuccess("Prescription saved successfully");
+
+      setIsModalOpen(false);
+
+      loadData();
+
+    } catch (error) {
+
+      console.error(error);
+      notifyError("Failed to save prescription");
+
+    }
+
+  };
+
+  const deletePrescriptionHandler = async (id) => {
+
+    if (!window.confirm("Delete this prescription?")) return;
+
+    try {
+
+      await deletePrescription(id);
+
+      setPrescriptions(prev =>
+        prev.filter(p => p.id !== id)
+      );
+
+      notifySuccess("Prescription deleted");
+
+    } catch (error) {
+
+      notifyError("Failed to delete prescription");
+
+    }
 
   };
 
   const printPrescription = (p) => {
 
-    const patient = patients.find(pt => pt.id === p.patient?.id);
-    const doctor = doctors.find(d => d.id === p.doctor?.id);
-
-    const medicines = p.items.map(
-      m => `<li>${m.medicine} - ${m.dosage} (${m.instruction})</li>`
-    ).join("");
+    const patient = patients.find(pt => pt.id === p.patientId);
+    const doctor = doctors.find(d => d.id === p.doctorId);
 
     const content = `
-      <h2>Hospital Prescription</h2>
-      <p><b>Patient:</b> ${patient?.name || "-"}</p>
-      <p><b>Doctor:</b> ${doctor?.name || "-"}</p>
-      <p><b>Diagnosis:</b> ${p.diagnosis}</p>
-      <h3>Medicines</h3>
-      <ul>${medicines}</ul>
-    `;
+<style>
+body{font-family:Arial;padding:30px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+td,th{border:1px solid #ddd;padding:8px}
+</style>
+
+<h2>Hospital Prescription</h2>
+
+<p><b>Patient:</b> ${patient?.name || "-"}</p>
+<p><b>Doctor:</b> ${doctor?.name || "-"}</p>
+<p><b>Diagnosis:</b> ${p.diagnosis}</p>
+
+<table>
+<tr>
+<th>Medicine</th>
+<th>Dosage</th>
+<th>Instruction</th>
+</tr>
+
+${(p.items || []).map(m => `
+<tr>
+<td>${m.medicine}</td>
+<td>${m.dosage}</td>
+<td>${m.instruction}</td>
+</tr>
+`).join("")}
+
+</table>
+`;
 
     const win = window.open("", "", "width=700,height=700");
     win.document.write(content);
     win.print();
+
   };
 
   const patientOptions = patients.map(p => ({ label: p.name, value: p.id }));
   const doctorOptions = doctors.map(d => ({ label: d.name, value: d.id }));
   const appointmentOptions = appointments.map(a => ({ label: `Appointment ${a.id}`, value: a.id }));
 
+  const selectedPatient = patientOptions.find(p => p.value === form.patientId);
+  const selectedDoctor = doctorOptions.find(d => d.value === form.doctorId);
+  const selectedAppointment = appointmentOptions.find(a => a.value === form.appointmentId);
+
+  const isView = mode === "view";
+
   return (
+
     <div className="p-8 text-slate-900">
 
       <div className="flex justify-between mb-6">
@@ -179,37 +276,37 @@ export function Prescriptions() {
           <table className="w-full">
 
             <thead className="bg-slate-50 border-b sticky top-0">
+
               <tr>
+
                 <th className="p-4 text-left">ID</th>
                 <th className="p-4 text-left">Patient</th>
                 <th className="p-4 text-left">Doctor</th>
                 <th className="p-4 text-left">Diagnosis</th>
                 <th className="p-4 text-left">Medicines</th>
                 <th className="p-4 text-left">Actions</th>
+
               </tr>
+
             </thead>
 
             <tbody>
 
               {prescriptions.map(p => {
 
-                const patient = patients.find(pt => pt.id === p.patient?.id);
-                const doctor = doctors.find(d => d.id === p.doctor?.id);
+                const patient = patients.find(pt => pt.id === p.patientId);
+                const doctor = doctors.find(d => d.id === p.doctorId);
 
                 return (
 
                   <tr key={p.id} className="border-b">
 
                     <td className="p-4">{p.id}</td>
-
                     <td className="p-4">{patient?.name || "-"}</td>
-
                     <td className="p-4">{doctor?.name || "-"}</td>
-
                     <td className="p-4">{p.diagnosis}</td>
-
                     <td className="p-4">
-                      {p.items.map(i => i.medicine).join(", ")}
+                      {(p.items || []).map(i => i.medicine).join(", ")}
                     </td>
 
                     <td className="p-4 flex gap-3">
@@ -224,6 +321,10 @@ export function Prescriptions() {
 
                       <button onClick={() => printPrescription(p)}>
                         <Printer size={16} />
+                      </button>
+
+                      <button onClick={() => deletePrescriptionHandler(p.id)}>
+                        <Trash2 size={16} />
                       </button>
 
                     </td>
@@ -248,7 +349,11 @@ export function Prescriptions() {
           <div className="bg-white p-6 rounded-xl max-w-3xl w-full max-h-[85vh] overflow-y-auto">
 
             <h2 className="text-lg font-semibold mb-4">
-              {mode === "edit" ? "Edit Prescription" : "Add Prescription"}
+
+              {mode === "edit" && "Edit Prescription"}
+              {mode === "add" && "Add Prescription"}
+              {mode === "view" && "View Prescription"}
+
             </h2>
 
             <div className="grid grid-cols-2 gap-4">
@@ -256,24 +361,30 @@ export function Prescriptions() {
               <div>
                 <label>Patient</label>
                 <Select
+                  value={selectedPatient}
                   options={patientOptions}
                   onChange={o => handleChange("patientId", o.value)}
+                  isDisabled={isView}
                 />
               </div>
 
               <div>
                 <label>Doctor</label>
                 <Select
+                  value={selectedDoctor}
                   options={doctorOptions}
                   onChange={o => handleChange("doctorId", o.value)}
+                  isDisabled={isView}
                 />
               </div>
 
               <div className="col-span-2">
                 <label>Appointment</label>
                 <Select
+                  value={selectedAppointment}
                   options={appointmentOptions}
                   onChange={o => handleChange("appointmentId", o.value)}
+                  isDisabled={isView}
                 />
               </div>
 
@@ -281,6 +392,7 @@ export function Prescriptions() {
                 <label>Diagnosis</label>
                 <textarea
                   value={form.diagnosis}
+                  disabled={isView}
                   onChange={e => handleChange("diagnosis", e.target.value)}
                   className="border p-2 rounded w-full"
                 />
@@ -297,6 +409,7 @@ export function Prescriptions() {
                 <input
                   placeholder="Medicine"
                   value={item.medicine}
+                  disabled={isView}
                   onChange={e => handleItemChange(index, "medicine", e.target.value)}
                   className="border p-2 rounded"
                 />
@@ -304,6 +417,7 @@ export function Prescriptions() {
                 <input
                   placeholder="Dosage"
                   value={item.dosage}
+                  disabled={isView}
                   onChange={e => handleItemChange(index, "dosage", e.target.value)}
                   className="border p-2 rounded"
                 />
@@ -313,13 +427,16 @@ export function Prescriptions() {
                   <input
                     placeholder="Instruction"
                     value={item.instruction}
+                    disabled={isView}
                     onChange={e => handleItemChange(index, "instruction", e.target.value)}
                     className="border p-2 rounded w-full"
                   />
 
-                  <button onClick={() => removeMedicineRow(index)}>
-                    <Trash2 size={16} />
-                  </button>
+                  {!isView && (
+                    <button onClick={() => removeMedicineRow(index)}>
+                      <Trash2 size={16} />
+                    </button>
+                  )}
 
                 </div>
 
@@ -327,13 +444,15 @@ export function Prescriptions() {
 
             ))}
 
-            <button
-              onClick={addMedicineRow}
-              className="mt-3 flex items-center gap-2 text-blue-700"
-            >
-              <Plus size={16} />
-              Add Medicine
-            </button>
+            {!isView && (
+              <button
+                onClick={addMedicineRow}
+                className="mt-3 flex items-center gap-2 text-blue-700"
+              >
+                <Plus size={16} />
+                Add Medicine
+              </button>
+            )}
 
             <div className="flex justify-end gap-3 mt-6">
 
@@ -344,12 +463,14 @@ export function Prescriptions() {
                 Close
               </button>
 
-              <button
-                onClick={savePrescription}
-                className="bg-blue-900 text-white px-4 py-2 rounded"
-              >
-                Save
-              </button>
+              {!isView && (
+                <button
+                  onClick={savePrescription}
+                  className="bg-blue-900 text-white px-4 py-2 rounded"
+                >
+                  Save
+                </button>
+              )}
 
             </div>
 
@@ -360,5 +481,6 @@ export function Prescriptions() {
       )}
 
     </div>
+
   );
 }
