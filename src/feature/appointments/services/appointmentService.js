@@ -17,3 +17,7 @@ export const updateAppointment = async(id, appointment) => {
  return res.data;
 };
 
+export const deleteAppointment=async(id)=>{
+  const res= await axios.delete(`${API_BASE}/appointments/${id}`)
+  return res.data
+}

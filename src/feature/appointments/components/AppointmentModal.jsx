@@ -11,8 +11,7 @@ export function AppointmentModal({
   doctors,
   patients,
   setSelectedAppointment,
-  setAppointments,
-  appointments
+  loadData
 }) {
 
   const today = new Date().toISOString().split("T")[0];
@@ -29,24 +28,37 @@ export function AppointmentModal({
 
   const [errors, setErrors] = useState({});
 
+  /* ---------------- HANDLE CHANGE ---------------- */
+
   const handleChange = (field, value) => {
+
     setForm((prev) => ({
       ...prev,
-      [field]: value,
+      [field]: value
     }));
+
   };
+
+  /* ---------------- VALIDATION ---------------- */
 
   const validateForm = () => {
 
     const newErrors = {};
 
-    if (!form.patientId) newErrors.patientId = "Patient is required";
-    if (!form.doctorId) newErrors.doctorId = "Doctor is required";
+    if (!form.patientId)
+      newErrors.patientId = "Patient is required";
+
+    if (!form.doctorId)
+      newErrors.doctorId = "Doctor is required";
 
     if (!form.appointmentDate) {
+
       newErrors.appointmentDate = "Appointment date is required";
+
     } else if (form.appointmentDate < today) {
+
       newErrors.appointmentDate = "Date cannot be in the past";
+
     }
 
     if (!form.appointmentTime)
@@ -58,7 +70,10 @@ export function AppointmentModal({
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
+
   };
+
+  /* ---------------- SAVE APPOINTMENT ---------------- */
 
   const saveChanges = async () => {
 
@@ -77,28 +92,24 @@ export function AppointmentModal({
 
       if (mode === "add") {
 
-        const res = await createAppointment(payload);
+        await createAppointment(payload);
 
-        if (res?.data) {
-          setAppointments((prev) => [...prev, res.data]);
-          notifySuccess("Appointment created successfully");
-        }
+        notifySuccess("Appointment created successfully");
 
       }
 
       if (mode === "edit") {
 
-        const res = await updateAppointment(form.id, payload);
+        await updateAppointment(form.id, payload);
 
-        if (res?.data) {
-          setAppointments((prev) =>
-            prev.map((a) => (a.id === form.id ? res.data : a))
-          );
+        notifySuccess("Appointment updated successfully");
 
-          notifySuccess("Appointment updated successfully");
-        }
       }
 
+      /* reload table data */
+      await loadData();
+
+      /* close modal */
       setSelectedAppointment(null);
 
     } catch (error) {
@@ -106,10 +117,15 @@ export function AppointmentModal({
       console.error(error);
 
       notifyError(
-        error.response?.data?.message || "Failed to save appointment"
+        error.response?.data?.message ||
+        "Failed to save appointment"
       );
+
     }
+
   };
+
+  /* ---------------- OPTIONS ---------------- */
 
   const patientOptions = patients.map((p) => ({
     label: `${p.name} (ID:${p.id})`,
@@ -121,52 +137,80 @@ export function AppointmentModal({
     value: d.id,
   }));
 
-  return (
-    <div className="fixed inset-0 bg-black/60 flex justify-center items-center">
+  /* ---------------- UI ---------------- */
 
-      <div className="bg-white p-6 rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+  return (
+
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+      <div className="bg-white rounded-xl p-6 w-[500px] shadow-lg">
 
         <h2 className="text-lg font-semibold mb-4">
+
           {mode === "view"
             ? "View Appointment"
             : mode === "edit"
             ? "Edit Appointment"
             : "Add Appointment"}
+
         </h2>
 
         <div className="grid grid-cols-2 gap-4">
 
           {/* Patient */}
+
           <div>
-            <label className="text-sm font-medium">Patient</label>
+
+            <label className="text-sm font-medium">
+              Patient
+            </label>
+
             <Select
               options={patientOptions}
               value={patientOptions.find((p) => p.value === form.patientId)}
               onChange={(o) => handleChange("patientId", o.value)}
               isDisabled={mode === "view"}
             />
+
             {errors.patientId && (
-              <p className="text-red-500 text-sm">{errors.patientId}</p>
+              <p className="text-red-500 text-sm">
+                {errors.patientId}
+              </p>
             )}
+
           </div>
 
           {/* Doctor */}
+
           <div>
-            <label className="text-sm font-medium">Doctor</label>
+
+            <label className="text-sm font-medium">
+              Doctor
+            </label>
+
             <Select
               options={doctorOptions}
               value={doctorOptions.find((d) => d.value === form.doctorId)}
               onChange={(o) => handleChange("doctorId", o.value)}
               isDisabled={mode === "view"}
             />
+
             {errors.doctorId && (
-              <p className="text-red-500 text-sm">{errors.doctorId}</p>
+              <p className="text-red-500 text-sm">
+                {errors.doctorId}
+              </p>
             )}
+
           </div>
 
           {/* Date */}
+
           <div>
-            <label className="text-sm font-medium">Appointment Date</label>
+
+            <label className="text-sm font-medium">
+              Appointment Date
+            </label>
+
             <input
               type="date"
               min={today}
@@ -177,14 +221,23 @@ export function AppointmentModal({
               className="border p-2 rounded w-full"
               disabled={mode === "view"}
             />
+
             {errors.appointmentDate && (
-              <p className="text-red-500 text-sm">{errors.appointmentDate}</p>
+              <p className="text-red-500 text-sm">
+                {errors.appointmentDate}
+              </p>
             )}
+
           </div>
 
           {/* Time */}
+
           <div>
-            <label className="text-sm font-medium">Appointment Time</label>
+
+            <label className="text-sm font-medium">
+              Appointment Time
+            </label>
+
             <input
               type="time"
               value={form.appointmentTime}
@@ -194,35 +247,59 @@ export function AppointmentModal({
               className="border p-2 rounded w-full"
               disabled={mode === "view"}
             />
+
             {errors.appointmentTime && (
-              <p className="text-red-500 text-sm">{errors.appointmentTime}</p>
+              <p className="text-red-500 text-sm">
+                {errors.appointmentTime}
+              </p>
             )}
+
           </div>
 
           {/* Status */}
+
           <div>
-            <label className="text-sm font-medium">Status</label>
+
+            <label className="text-sm font-medium">
+              Status
+            </label>
+
             <select
               value={form.status}
-              onChange={(e) => handleChange("status", e.target.value)}
+              onChange={(e) =>
+                handleChange("status", e.target.value)
+              }
               className="border p-2 rounded w-full"
               disabled={mode === "view"}
             >
+
               {STATUSES.map((s) => (
-                <option key={s}>{s}</option>
+                <option key={s} value={s}>
+                  {s}
+                </option>
               ))}
+
             </select>
+
           </div>
 
           {/* Remarks */}
+
           <div className="col-span-2">
-            <label className="text-sm font-medium">Remarks</label>
+
+            <label className="text-sm font-medium">
+              Remarks
+            </label>
+
             <textarea
               value={form.remarks}
-              onChange={(e) => handleChange("remarks", e.target.value)}
+              onChange={(e) =>
+                handleChange("remarks", e.target.value)
+              }
               className="border p-2 rounded w-full"
               disabled={mode === "view"}
             />
+
           </div>
 
         </div>
@@ -237,17 +314,21 @@ export function AppointmentModal({
           </button>
 
           {mode !== "view" && (
+
             <button
               onClick={saveChanges}
               className="bg-blue-900 text-white px-4 py-2 rounded-lg"
             >
               Save
             </button>
+
           )}
 
         </div>
 
       </div>
+
     </div>
+
   );
 }

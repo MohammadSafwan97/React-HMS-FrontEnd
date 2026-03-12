@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getAllDoctors,createDoctor,updateDoctor } from "../services/doctorService.js";
+import { getAllDoctors,createDoctor,updateDoctor,deleteDoctor } from "../services/doctorService.js";
 
 import DoctorHeader from "../components/DoctorHeader.jsx";
 import DoctorSearch from "../components/DoctorSearch.jsx";
@@ -22,6 +22,9 @@ export function Doctors() {
 
   const [mode, setMode] = useState("add");
   const [formData, setFormData] = useState({});
+
+  const [deleteDoctorId, setDeleteDoctorId] = useState(null);
+const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   /* ---------------- GET ALL DOCTORS ---------------- */
    
@@ -107,6 +110,43 @@ export function Doctors() {
 };
 
 
+const confirmDelete = async () => {
+
+  const id = deleteDoctorId;
+
+  if (!id) return;
+
+  const previousDoctors = [...doctors];
+
+  try {
+
+    // Optimistic UI update
+    setDoctors(prev => prev.filter(d => d.id !== id));
+
+    setShowDeleteConfirm(false);
+
+    await deleteDoctor(id);
+
+    notifySuccess("Doctor deleted successfully");
+
+  } catch (err) {
+
+    console.error("Delete failed:", err);
+
+    // Rollback UI
+    setDoctors(previousDoctors);
+
+    notifyError("Failed to delete doctor");
+
+  } finally {
+
+    setDeleteDoctorId(null);
+
+  }
+
+};
+
+
  
 
   return (
@@ -137,11 +177,16 @@ export function Doctors() {
 
           {filteredDoctors.map((doctor) => (
 
-            <DoctorCard
-              key={doctor.id}
-              doctor={doctor}
-              onEdit={openEdit}
-            />
+           <DoctorCard
+  key={doctor.id}
+  doctor={doctor}
+  onEdit={openEdit}
+  onDelete={(id) => {
+    setDeleteDoctorId(id);
+    setShowDeleteConfirm(true);
+  }}
+/>
+
 
           ))}
 
@@ -171,6 +216,46 @@ export function Doctors() {
         />
 
       )}
+
+
+      {showDeleteConfirm && (
+
+  <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+
+    <div className="bg-white rounded-xl p-6 w-[350px] space-y-4">
+
+      <h3 className="text-lg font-semibold">
+        Delete Doctor
+      </h3>
+
+      <p className="text-sm text-gray-600">
+        Are you sure you want to delete this doctor?
+        This action cannot be undone.
+      </p>
+
+      <div className="flex justify-end gap-3">
+
+        <button
+          onClick={() => setShowDeleteConfirm(false)}
+          className="px-4 py-2 border rounded-lg"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={confirmDelete}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+        >
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
 
     </div>
   );

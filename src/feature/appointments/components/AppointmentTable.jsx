@@ -1,4 +1,4 @@
-import { Eye, Edit } from "lucide-react";
+import { Eye, Edit, Trash2 } from "lucide-react";
 
 const statusStyles = {
   SCHEDULED: "bg-blue-100 text-blue-700",
@@ -6,12 +6,11 @@ const statusStyles = {
   CANCELLED: "bg-red-100 text-red-700",
 };
 
-export function AppointmentTable({ appointments, patients, doctors, openModal }) {
+export function AppointmentTable({ appointments, patients, doctors, openModal, onDelete }) {
 
   return (
     <div className="bg-white border rounded-xl overflow-hidden">
 
-      {/* Scroll container */}
       <div className="max-h-[500px] overflow-y-auto">
 
         <table className="w-full">
@@ -64,7 +63,8 @@ export function AppointmentTable({ appointments, patients, doctors, openModal })
                     </span>
                   </td>
 
-                  <td className="px-6 py-4 flex gap-2">
+                  <td className="px-6 py-4 flex gap-3">
+
                     <button
                       onClick={() => openModal(a, "view")}
                       className="text-slate-600 hover:text-blue-600"
@@ -78,6 +78,14 @@ export function AppointmentTable({ appointments, patients, doctors, openModal })
                     >
                       <Edit size={16} />
                     </button>
+
+                    <button
+                      onClick={() => onDelete(a.id)}
+                      className="text-slate-600 hover:text-red-600"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+
                   </td>
 
                 </tr>

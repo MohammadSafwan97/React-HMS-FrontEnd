@@ -15,4 +15,10 @@ return res.data;
 export const updateDoctor=async(id,patient)=>{
     const res=await axios.put(`${API_BASE_URL}/${id}`,patient)
     return res.data;
+
+}
+
+export const deleteDoctor=async(id)=>{
+    const res=await axios.delete(`${API_BASE_URL}/${id}`);
+    return res.data;
 }

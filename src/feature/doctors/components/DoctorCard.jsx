@@ -1,6 +1,6 @@
-import { Stethoscope, Phone, Mail, Edit } from "lucide-react";
+import { Stethoscope, Phone, Mail, Edit, Trash2 } from "lucide-react";
 
-export default function DoctorCard({ doctor, onEdit }) {
+export default function DoctorCard({ doctor, onEdit, onDelete }) {
 
   if (!doctor) return null;
 
@@ -13,23 +13,28 @@ export default function DoctorCard({ doctor, onEdit }) {
 
         <Stethoscope className="w-8 h-8 text-blue-900" />
 
-        <button onClick={() => onEdit(doctor)}>
-          <Edit className="w-4 h-4 text-slate-600 hover:text-blue-900" />
-        </button>
+        <div className="flex gap-2">
+
+          <button onClick={() => onEdit(doctor)}>
+            <Edit className="w-4 h-4 text-slate-600 hover:text-blue-900" />
+          </button>
+
+          <button onClick={() => onDelete(doctor.id)}>
+            <Trash2 className="w-4 h-4 text-red-600 hover:text-red-800" />
+          </button>
+
+        </div>
 
       </div>
 
-      
       <h3 className="font-semibold text-lg">
         {doctor?.name || "Unknown Doctor"}
       </h3>
 
-      
       <p className="text-sm text-slate-600">
         {doctor?.specialization || "N/A"}
       </p>
 
-      
       <div className="text-sm mt-3 space-y-1">
 
         <div>
