@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8080/api/prescriptions";
+const API_BASE_URL = "https://spring-boot-hospital-management-system.onrender.com/api/prescriptions";
 
 /* ---------------- GET ALL ---------------- */
 
