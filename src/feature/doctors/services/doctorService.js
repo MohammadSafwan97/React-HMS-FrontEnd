@@ -6,7 +6,7 @@ export const createDoctor = async (doctor) => {
 
   try {
 
-    const res = await axios.post(API_BASE_URL, doctor);
+    const res = await axios.post(`${API_BASE_URL}/doctors`, doctor);
     return res.data;
 
   } catch (error) {
