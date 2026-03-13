@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8080/api/users";
+const API_BASE="https://spring-boot-hospital-management-system.onrender.com/api/users"
 
 /* ---------------- GET ALL USERS ---------------- */
 
