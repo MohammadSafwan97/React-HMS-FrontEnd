@@ -10,7 +10,7 @@ import { MainDashboard } from "../../feature/dashboard/pages/MainDashboard";
 import { Appointments } from "../../feature/appointments/pages/Appointments";
 import { Patients } from "../../feature/patients/pages/Patients";
 import { Doctors } from "../../feature/doctors/pages/Doctor";
-import { MedicalRecords } from "../../feature/medicalrecords/pages/MedicalRecords.jsx";
+import { MedicalRecords } from "../../feature/medicalrecords/Pages/MedicalRecords.jsx";
 import { User } from "../../feature/users/pages/User";
 import { Prescriptions } from "../../feature/prescriptions/pages/Prescriptions";
 import { Chatbot } from "../../components/Chatbot";
