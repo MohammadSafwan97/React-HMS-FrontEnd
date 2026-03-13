@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL="https://spring-boot-hospital-management-system.onrender.com/api/appointments"
+const API_BASE="https://spring-boot-hospital-management-system.onrender.com/api/appointments"
 
 export const getAppointments =async () => {
   const res=await axios.get(`${API_BASE}`);
@@ -18,6 +18,6 @@ export const updateAppointment = async(id, appointment) => {
 };
 
 export const deleteAppointment=async(id)=>{
-  const res= await axios.delete(`${API_BASE}${id}`)
+  const res= await axios.delete(`${API_BASE}/${id}`)
   return res.data
 }
