@@ -1,6 +1,6 @@
-import { User, Mail, Shield, Edit } from "lucide-react";
+import { User, Mail, Shield, Edit, Trash2 } from "lucide-react";
 
-export default function UserCard({ user, onEdit }) {
+export default function UserCard({ user, onEdit, onDelete }) {
 
   if (!user) return null;
 
@@ -12,9 +12,17 @@ export default function UserCard({ user, onEdit }) {
 
         <User className="w-8 h-8 text-blue-900" />
 
-        <button onClick={() => onEdit(user)}>
-          <Edit className="w-4 h-4 text-slate-600 hover:text-blue-900" />
-        </button>
+        <div className="flex gap-3">
+
+          <button onClick={() => onEdit(user)}>
+            <Edit className="w-4 h-4 text-slate-600 hover:text-blue-900" />
+          </button>
+
+          <button onClick={() => onDelete(user.id)}>
+            <Trash2 className="w-4 h-4 text-red-600 hover:text-red-800" />
+          </button>
+
+        </div>
 
       </div>
 
@@ -23,17 +31,13 @@ export default function UserCard({ user, onEdit }) {
       </h3>
 
       <div className="flex items-center gap-2 mt-2 text-sm">
-
         <Mail className="w-4 h-4" />
         {user?.email || "N/A"}
-
       </div>
 
       <div className="flex items-center gap-2 mt-2 text-sm">
-
         <Shield className="w-4 h-4" />
         {user?.role || "N/A"}
-
       </div>
 
       <div className="text-sm mt-3">

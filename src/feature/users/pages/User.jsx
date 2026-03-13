@@ -17,8 +17,6 @@ import { notifySuccess, notifyError } from "../../../shared/utils/notification";
 
 export function User() {
 
-  /* ---------------- STATE ---------------- */
-
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -33,36 +31,34 @@ export function User() {
 
   /* ---------------- LOAD USERS ---------------- */
 
+  const loadUsers = async () => {
+
+    try {
+
+      const data = await getAllUsers();
+      setUsers(data || []);
+
+    } catch (error) {
+
+      console.log("Error loading users", error);
+      notifyError("Failed to load users");
+
+    }
+
+  };
+
   useEffect(() => {
-
-    const loadUsers = async () => {
-
-      try {
-
-        const data = await getAllUsers();
-        setUsers(data);
-
-      } catch (error) {
-
-        console.log("Error loading users", error);
-        notifyError("Failed to load users");
-
-      }
-
-    };
-
     loadUsers();
-
   }, []);
 
   /* ---------------- FILTER USERS ---------------- */
 
-  const filteredUsers = users.filter((user) => {
+  const filteredUsers = (users || []).filter((user) => {
 
-    const name = user.name || "";
-    const email = user.email || "";
-    const role = user.role || "";
-    const id = user.id ? user.id.toString() : "";
+    const name = user?.name || "";
+    const email = user?.email || "";
+    const role = user?.role || "";
+    const id = user?.id ? user.id.toString() : "";
 
     return (
       name.toLowerCase().includes(search.toLowerCase()) ||
@@ -78,7 +74,14 @@ export function User() {
   const openAdd = () => {
 
     setMode("add");
-    setFormData({});
+
+    setFormData({
+      id: null,
+      name: "",
+      email: "",
+      role: ""
+    });
+
     setShowModal(true);
 
   };
@@ -87,8 +90,17 @@ export function User() {
 
   const openEdit = (user) => {
 
+    if (!user) return;
+
     setMode("edit");
-    setFormData(user);
+
+    setFormData({
+      id: user.id,
+      name: user.name || "",
+      email: user.email || "",
+      role: user.role || ""
+    });
+
     setShowModal(true);
 
   };
@@ -97,10 +109,12 @@ export function User() {
 
   const handleChange = (e) => {
 
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
 
   };
 
@@ -110,16 +124,16 @@ export function User() {
 
     try {
 
-      if (mode === "edit") {
+      if (mode === "edit" && formData.id) {
 
         const updatedUser = await updateUser(
           formData.id,
           formData
         );
 
-        setUsers((prev) =>
-          prev.map((user) =>
-            user.id === updatedUser.id ? updatedUser : user
+        setUsers(prev =>
+          prev.map(u =>
+            u.id === updatedUser.id ? updatedUser : u
           )
         );
 
@@ -129,10 +143,7 @@ export function User() {
 
         const newUser = await createUser(formData);
 
-        setUsers((prev) => [
-          ...prev,
-          newUser
-        ]);
+        setUsers(prev => [...prev, newUser]);
 
         notifySuccess("User created successfully");
 
@@ -161,9 +172,8 @@ export function User() {
 
     try {
 
-      // Optimistic UI
-      setUsers((prev) =>
-        prev.filter((user) => user.id !== id)
+      setUsers(prev =>
+        prev.filter(user => user.id !== id)
       );
 
       setShowDeleteConfirm(false);
@@ -194,21 +204,15 @@ export function User() {
 
     <div className="p-8 text-slate-900 space-y-10">
 
-      {/* HEADER */}
-
       <UserHeader
         onAdd={openAdd}
         onReport={() => setShowReport(true)}
       />
 
-      {/* SEARCH */}
-
       <UserSearch
         value={search}
         onChange={setSearch}
       />
-
-      {/* USERS GRID */}
 
       {filteredUsers.length === 0 ? (
 
@@ -238,8 +242,6 @@ export function User() {
 
       )}
 
-      {/* USER MODAL */}
-
       {showModal && (
 
         <UserModal
@@ -252,8 +254,6 @@ export function User() {
 
       )}
 
-      {/* REPORT MODAL */}
-
       {showReport && (
 
         <UserReportModal
@@ -262,8 +262,6 @@ export function User() {
         />
 
       )}
-
-      {/* DELETE CONFIRMATION MODAL */}
 
       {showDeleteConfirm && (
 
