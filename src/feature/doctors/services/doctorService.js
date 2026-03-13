@@ -1,12 +1,12 @@
 import axios from "axios";
 
-import { API_BASE_URL } from "../../../config/api.js";
+const API_BASE_URL="https://spring-boot-hospital-management-system.onrender.com/api/doctors"
 
 export const createDoctor = async (doctor) => {
 
   try {
 
-    const res = await axios.post(`${API_BASE_URL}/doctors`, doctor);
+    const res = await axios.post(API_BASE_URL, doctor);
     return res.data;
 
   } catch (error) {
