@@ -46,7 +46,7 @@ export function LoginPage({ onLogin }) {
             </div>
 
             <h1 className="text-2xl font-semibold text-slate-900">
-              CityCare Hospital
+              Faris Hospital
             </h1>
 
             <p className="text-slate-600 text-sm">

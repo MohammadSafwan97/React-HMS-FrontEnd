@@ -90,7 +90,7 @@ export function DashboardLayout({ user, onLogout }) {
             />
 
             <div>
-              <div className="font-semibold">CityCare Hospital</div>
+              <div className="font-semibold">Faris Hospital</div>
 
               <div className="text-xs text-blue-300">
                 Management System
