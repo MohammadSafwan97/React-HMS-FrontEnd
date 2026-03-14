@@ -29,7 +29,7 @@ const NAV_SECTIONS = [
       { path: "/patients", icon: Users, label: "Patients" },
       { path: "/appointments", icon: CalendarCheck, label: "Appointments" },
       { path: "/prescriptions", icon: FileText, label: "Prescriptions" },
-      // { path: "/medical-records", icon: ClipboardList, label: "Medical Records" },
+      // { path: "/ai-assitant", icon: ClipboardList, label: "Doctor Assistant" },
     ],
   },
 
@@ -38,6 +38,7 @@ const NAV_SECTIONS = [
     items: [
       { path: "/doctors", icon: Stethoscope, label: "Doctors" },
       { path: "/users", icon: UserCog, label: "Users" },
+      { path: "/ai-assistant", icon: ClipboardList, label: "Doctor Assistant" },
     ],
   },
 ];

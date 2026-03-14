@@ -13,7 +13,7 @@ import { Doctors } from "../../feature/doctors/pages/Doctor";
 import { MedicalRecords } from "../../feature/medicalrecords/Pages/MedicalRecords.jsx";
 import { User } from "../../feature/users/pages/User";
 import { Prescriptions } from "../../feature/prescriptions/pages/Prescriptions";
-import { Chatbot } from "../../components/Chatbot";
+import { MedicalAssistant } from "../../feature/ai-assistant/components/MedicalAssistant";
 
 export function AppRoutes({ user, onLogin, onLogout }) {
 
@@ -53,7 +53,7 @@ export function AppRoutes({ user, onLogin, onLogout }) {
         <Route path="users" element={<User />} />
         <Route path="prescriptions" element={<Prescriptions />} />
         <Route path="medical-records" element={<MedicalRecords />} />
-        <Route path="chatbot" element={<Chatbot />} />
+        <Route path="ai-assistant" element={<MedicalAssistant/>} />
 
       </Route>
 
