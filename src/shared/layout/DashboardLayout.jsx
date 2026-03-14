@@ -29,7 +29,7 @@ const NAV_SECTIONS = [
       { path: "/patients", icon: Users, label: "Patients" },
       { path: "/appointments", icon: CalendarCheck, label: "Appointments" },
       { path: "/prescriptions", icon: FileText, label: "Prescriptions" },
-      { path: "/medical-records", icon: ClipboardList, label: "Medical Records" },
+      // { path: "/medical-records", icon: ClipboardList, label: "Medical Records" },
     ],
   },
 
