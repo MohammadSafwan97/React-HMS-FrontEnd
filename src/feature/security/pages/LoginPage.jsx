@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { HeartPulse } from "lucide-react";
-import { MOCK_USERS } from "../mocks/users";
+import { login } from "../services/authService";
 
 export function LoginPage({ onLogin }) {
 
@@ -8,21 +8,22 @@ export function LoginPage({ onLogin }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
     setError("");
 
-    const user = MOCK_USERS.find(
-      (u) => u.email === email && u.password === password
-    );
+    try {
 
-    if (!user) {
-      setError("Invalid email or password");
-      return;
+      const user = await login(email, password);
+
+      onLogin(user);
+
+    } catch (err) {
+
+      setError("Invalid username or password");
+
     }
-
-    onLogin(user);
 
   };
 
@@ -87,14 +88,14 @@ export function LoginPage({ onLogin }) {
             <div>
 
               <label className="block text-slate-700 mb-2">
-                Email Address
+                Username
               </label>
 
               <input
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="doctor@hospital.com"
+                placeholder="username"
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 
                 rounded-lg text-slate-900 placeholder-slate-400
                 focus:outline-none focus:ring-2 focus:ring-blue-700 
@@ -137,28 +138,6 @@ export function LoginPage({ onLogin }) {
             </button>
 
           </form>
-
-          {/* Demo Accounts */}
-
-          <div className="mt-6 bg-slate-50 border rounded-lg p-4 text-sm">
-
-            <p className="text-slate-600 mb-2 font-medium">
-              Demo Accounts
-            </p>
-
-            <p className="text-slate-500">
-              Admin: admin@hospital.com
-            </p>
-
-            <p className="text-slate-500">
-              Doctor: doctor@hospital.com
-            </p>
-
-            <p className="text-slate-500">
-              Receptionist: reception@hospital.com
-            </p>
-
-          </div>
 
           {/* Footer */}
 

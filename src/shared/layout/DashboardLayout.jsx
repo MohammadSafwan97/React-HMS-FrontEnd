@@ -29,7 +29,6 @@ const NAV_SECTIONS = [
       { path: "/patients", icon: Users, label: "Patients" },
       { path: "/appointments", icon: CalendarCheck, label: "Appointments" },
       { path: "/prescriptions", icon: FileText, label: "Prescriptions" },
-      // { path: "/ai-assitant", icon: ClipboardList, label: "Doctor Assistant" },
     ],
   },
 
@@ -43,33 +42,22 @@ const NAV_SECTIONS = [
   },
 ];
 
-/* ---------------- ROLE ACCESS ---------------- */
-
-const NAV_BY_ROLE = {
-  admin: NAV_SECTIONS.flatMap((section) => section.items.map((i) => i.path)),
-
-  doctor: [
-    "/dashboard",
-    "/patients",
-    "/appointments",
-    "/medical-records",
-    "/prescriptions",
-  ],
-
-  receptionist: ["/dashboard", "/patients", "/appointments"],
-};
-
 /* ---------------- COMPONENT ---------------- */
 
 export function DashboardLayout({ user, onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  if (!user || !user.role) return null;
+  // Only check if user exists
+  if (!user) return null;
 
-  const allowedPaths = NAV_BY_ROLE[user.role] || [];
+  // Allow all navigation paths for now
+  const allowedPaths = NAV_SECTIONS.flatMap(section =>
+    section.items.map(item => item.path)
+  );
 
   return (
     <div className="min-h-screen flex bg-slate-50">
+
       {/* SIDEBAR */}
       <aside
         className={`
@@ -80,6 +68,7 @@ export function DashboardLayout({ user, onLogout }) {
         md:translate-x-0
       `}
       >
+
         {/* LOGO */}
         <div className="p-6 border-b border-blue-800">
           <div className="flex items-center gap-3">
@@ -102,6 +91,7 @@ export function DashboardLayout({ user, onLogout }) {
         {/* NAVIGATION */}
         <nav className="flex-1 overflow-y-auto px-3 py-5">
           {NAV_SECTIONS.map((section) => {
+
             const visibleItems = section.items.filter((item) =>
               allowedPaths.includes(item.path)
             );
@@ -110,12 +100,14 @@ export function DashboardLayout({ user, onLogout }) {
 
             return (
               <div key={section.title} className="mb-6">
+
                 <div className="text-xs text-blue-300 uppercase px-3 mb-2">
                   {section.title}
                 </div>
 
                 <div className="space-y-1">
                   {visibleItems.map((item) => {
+
                     const Icon = item.icon;
 
                     return (
@@ -134,10 +126,12 @@ export function DashboardLayout({ user, onLogout }) {
                         <Icon className="w-5 h-5" />
 
                         <span className="text-sm">{item.label}</span>
+
                       </NavLink>
                     );
                   })}
                 </div>
+
               </div>
             );
           })}
@@ -145,18 +139,21 @@ export function DashboardLayout({ user, onLogout }) {
 
         {/* USER PROFILE */}
         <div className="p-4 border-t border-blue-800">
+
           <div className="flex items-center gap-3 mb-3">
+
             <div className="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center">
               <User className="w-5 h-5" />
             </div>
 
             <div className="flex-1">
-              <div className="text-sm font-medium">{user.email}</div>
 
-              <div className="text-xs text-blue-300 capitalize">
-                {user.role}
+              <div className="text-sm font-medium">
+                {user.email || user.username}
               </div>
+
             </div>
+
           </div>
 
           <button
@@ -166,7 +163,9 @@ export function DashboardLayout({ user, onLogout }) {
             <LogOut className="w-4 h-4" />
             Logout
           </button>
+
         </div>
+
       </aside>
 
       {/* MOBILE OVERLAY */}
@@ -179,19 +178,24 @@ export function DashboardLayout({ user, onLogout }) {
 
       {/* MAIN CONTENT */}
       <main className="flex-1 overflow-y-auto">
+
         {/* MOBILE TOPBAR */}
         <div className="md:hidden flex items-center justify-between p-4 bg-white shadow">
+
           <button onClick={() => setSidebarOpen(true)}>
             <Menu className="w-6 h-6 text-slate-700" />
           </button>
 
           <div className="font-semibold text-slate-700">
-            CityCare
+            Faris Hospital
           </div>
+
         </div>
 
         <Outlet />
+
       </main>
+
     </div>
   );
 }

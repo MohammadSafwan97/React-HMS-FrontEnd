@@ -1,12 +1,9 @@
-import axios from "axios";
+import apiClient from "../../../api/apiClient"
 
-const API_BASE_URL = "https://spring-boot-hospital-management-system.onrender.com/api/prescriptions";
-
-/* ---------------- GET ALL ---------------- */
 
 export const getPrescriptions = async () => {
   try {
-    const res = await axios.get(API_BASE_URL);
+    const res = await apiClient.get("/prescriptions");
     return res.data;
   } catch (error) {
     throw error?.response?.data?.message || "Failed to fetch prescriptions";
@@ -17,7 +14,7 @@ export const getPrescriptions = async () => {
 
 export const getPrescriptionById = async (id) => {
   try {
-    const res = await axios.get(`${API_BASE_URL}/${id}`);
+    const res = await apiClient.get(`/prescriptions/${id}`);
     return res.data;
   } catch (error) {
     throw error?.response?.data?.message || "Failed to fetch prescription";
@@ -28,7 +25,7 @@ export const getPrescriptionById = async (id) => {
 
 export const createPrescription = async (prescription) => {
   try {
-    const res = await axios.post(API_BASE_URL, prescription);
+    const res = await apiClient.post("/prescriptions", prescription);
     return res.data;
   } catch (error) {
     throw error?.response?.data?.message || "Failed to create prescription";
@@ -39,7 +36,7 @@ export const createPrescription = async (prescription) => {
 
 export const updatePrescription = async (id, prescription) => {
   try {
-    const res = await axios.put(`${API_BASE_URL}/${id}`, prescription);
+    const res = await apiClient.put(`/prescriptions/${id}`, prescription);
     return res.data;
   } catch (error) {
     throw error?.response?.data?.message || "Failed to update prescription";
@@ -50,7 +47,7 @@ export const updatePrescription = async (id, prescription) => {
 
 export const deletePrescription = async (id) => {
   try {
-    const res = await axios.delete(`${API_BASE_URL}/${id}`);
+    const res = await apiClient.delete(`/prescriptions/${id}`);
     return res.data;
   } catch (error) {
     throw error?.response?.data?.message || "Failed to delete prescription";

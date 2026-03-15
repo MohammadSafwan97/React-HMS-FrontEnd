@@ -23,9 +23,9 @@ export default function UserModal({
         <div className="space-y-4">
 
           <input
-            name="name"
+            name="username"
             placeholder="Name"
-            value={formData.name || ""}
+            value={formData.username || ""}
             onChange={onChange}
             className="w-full border rounded-lg px-3 py-2"
           />

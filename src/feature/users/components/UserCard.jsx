@@ -27,7 +27,7 @@ export default function UserCard({ user, onEdit, onDelete }) {
       </div>
 
       <h3 className="font-semibold text-lg">
-        {user?.name || "Unknown User"}
+        {user?.username || "Unknown User"}
       </h3>
 
       <div className="flex items-center gap-2 mt-2 text-sm">

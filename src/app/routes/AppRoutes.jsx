@@ -1,9 +1,8 @@
 import { Routes, Route, Navigate } from "react-router";
 
 import { ProtectedRoute } from "./ProtectedRoute";
-import { getDefaultRoute } from "./roleRoutes";
 
-import { LoginPage } from "../LoginPage";
+import { LoginPage } from "../../feature/security/pages/LoginPage";
 import { DashboardLayout } from "../../shared/layout/DashboardLayout";
 
 import { MainDashboard } from "../../feature/dashboard/pages/MainDashboard";
@@ -27,7 +26,7 @@ export function AppRoutes({ user, onLogin, onLogout }) {
         element={
           !user
             ? <LoginPage onLogin={onLogin} />
-            : <Navigate to={getDefaultRoute(user)} replace />
+            : <Navigate to="/dashboard" replace />
         }
       />
 
@@ -44,8 +43,9 @@ export function AppRoutes({ user, onLogin, onLogout }) {
 
         <Route
           index
-          element={<Navigate to={getDefaultRoute(user)} replace />}
+          element={<Navigate to="/dashboard" replace />}
         />
+
         <Route path="dashboard" element={<MainDashboard />} />
         <Route path="appointments" element={<Appointments />} />
         <Route path="patients" element={<Patients />} />
@@ -53,7 +53,7 @@ export function AppRoutes({ user, onLogin, onLogout }) {
         <Route path="users" element={<User />} />
         <Route path="prescriptions" element={<Prescriptions />} />
         <Route path="medical-records" element={<MedicalRecords />} />
-        <Route path="ai-assistant" element={<MedicalAssistant/>} />
+        <Route path="ai-assistant" element={<MedicalAssistant />} />
 
       </Route>
 

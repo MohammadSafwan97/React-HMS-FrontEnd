@@ -55,7 +55,7 @@ export function User() {
 
   const filteredUsers = (users || []).filter((user) => {
 
-    const name = user?.name || "";
+    const name = user?.username || "";
     const email = user?.email || "";
     const role = user?.role || "";
     const id = user?.id ? user.id.toString() : "";
@@ -96,7 +96,7 @@ export function User() {
 
     setFormData({
       id: user.id,
-      name: user.name || "",
+      name: user.username || "",
       email: user.email || "",
       role: user.role || ""
     });

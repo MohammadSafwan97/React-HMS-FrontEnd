@@ -1,12 +1,10 @@
-import axios from "axios";
-
-const API_BASE_URL="https://spring-boot-hospital-management-system.onrender.com/api/prescription-items"
+import apiClient from "../../../api/apiClient";
 
 /* ---------------- CREATE ---------------- */
 
 export const createPrescriptionItem = async (item) => {
   try {
-    const res = await axios.post(API_BASE_URL, item);
+    const res = await apiClient.post("/prescription-items", item);
     return res.data;
   } catch (error) {
     throw error?.response?.data?.message || "Failed to create prescription item";
@@ -17,7 +15,7 @@ export const createPrescriptionItem = async (item) => {
 
 export const deletePrescriptionItem = async (id) => {
   try {
-    const res = await axios.delete(`${API_BASE_URL}/${id}`);
+    const res = await apiClient.delete(`"/prescription-items"/${id}`);
     return res.data;
   } catch (error) {
     throw error?.response?.data?.message || "Failed to delete prescription item";

@@ -1,69 +1,50 @@
-const API_BASE="https://spring-boot-hospital-management-system.onrender.com/api/users"
+import apiClient from "../../../api/apiClient"
 
 /* ---------------- GET ALL USERS ---------------- */
 
 export async function getAllUsers() {
 
-  const response = await fetch(API_BASE);
+  const response = await apiClient.get("/users");
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch users");
-  }
-
-  return response.json();
+return response.data;
 
 }
 
 /* ---------------- CREATE USER ---------------- */
 
 export async function createUser(user) {
-
-  const response = await fetch(API_BASE, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(user),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to create user");
+  try{
+  const response = await apiClient.post("/users",user);
+  return response.data;
+  }
+  catch(error){
+throw error?.response?.data?.message ||"Failed to create user";
   }
 
-  return response.json();
+ }
 
-}
 
 /* ---------------- UPDATE USER ---------------- */
 
 export async function updateUser(id, user) {
-
-  const response = await fetch(`${API_BASE}/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(user),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to update user");
-  }
-
-  return response.json();
-
+  try{
+  const response = await apiClient.put(`/users/${id}`,user)
+   return response.data;
+}
+catch(error){
+throw error?.response?.data?.message ||"Failed to update user";
 }
 
+}
 /* ---------------- DELETE USER ---------------- */
-
 export async function deleteUser(id) {
-
-  const response = await fetch(`${API_BASE}/${id}`, {
-    method: "DELETE",
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to delete user");
+  try{
+  const response = await apiClient.delete(`/users/${id}`);
+  return response.data
   }
+  catch(error){
+  throw error?.response?.data?.message || "Failed to delete the user"
+  }
+  
 
 }

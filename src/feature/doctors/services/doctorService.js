@@ -1,12 +1,11 @@
-import axios from "axios";
+import apiClient from "../../../api/apiClient";
 
-const API_BASE_URL="https://spring-boot-hospital-management-system.onrender.com/api/doctors"
 
 export const createDoctor = async (doctor) => {
 
   try {
 
-    const res = await axios.post(API_BASE_URL, doctor);
+    const res = await apiClient.post("/doctors", doctor);
     return res.data;
 
   } catch (error) {
@@ -21,7 +20,7 @@ export const getAllDoctors = async () => {
 
   try {
 
-    const res = await axios.get(API_BASE_URL);
+    const res = await apiClient.get("/doctors");
     return res.data;
 
   } catch (error) {
@@ -36,7 +35,7 @@ export const updateDoctor = async (id, doctor) => {
 
   try {
 
-    const res = await axios.put(`${API_BASE_URL}/${id}`, doctor);
+    const res = await apiClient.put(`"/doctors"/${id}`, doctor);
     return res.data;
 
   } catch (error) {
@@ -51,7 +50,7 @@ export const deleteDoctor = async (id) => {
 
   try {
 
-    const res = await axios.delete(`${API_BASE_URL}/${id}`);
+    const res = await apiClient.delete(`"/doctors"/${id}`);
     return res.data;
 
   } catch (error) {
