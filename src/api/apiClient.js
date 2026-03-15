@@ -7,9 +7,7 @@ const apiClient = axios.create({
   }
 });
 
-/*
-Attach JWT automatically to every request
-*/
+
 
 apiClient.interceptors.request.use(
   (config) => {

@@ -1,12 +1,12 @@
-import apiClient from "../../../api/apiClient";
+
 
 import axios from "axios";
 
-const AUTH_API = "http://localhost:8080/api/auth";
+const AUTH_API = `${import.meta.env.VITE_API_BASE_URL}/auth/`;
 
 export const login = async (username, password) => {
 
-  const response = await axios.post(`${AUTH_API}/login`, {
+  const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
     username,
     password
   });
