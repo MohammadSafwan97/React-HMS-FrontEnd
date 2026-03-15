@@ -12,7 +12,7 @@ export default function DoctorModal({
     ["department", "Department", "select"],
     ["specialization", "Specialization", "select"],
     ["experience", "Experience (Years)", "number"],
-    ["phone", "Phone", "tel"],
+    ["phoneNo", "Phone", "tel"], 
   ];
 
   const departments = [
@@ -40,7 +40,7 @@ export default function DoctorModal({
 
   return (
 
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
 
       <div className="bg-white rounded-xl w-full max-w-2xl p-6">
 
@@ -48,7 +48,7 @@ export default function DoctorModal({
           {mode === "edit" ? "Edit Doctor" : "Add Doctor"}
         </h2>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {fields.map(([name, label, type]) => (
 

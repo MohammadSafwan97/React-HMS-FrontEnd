@@ -50,7 +50,7 @@ export const deleteDoctor = async (id) => {
 
   try {
 
-    const res = await apiClient.delete(`"/doctors"/${id}`);
+    const res = await apiClient.delete(`/doctors/${id}`);
     return res.data;
 
   } catch (error) {

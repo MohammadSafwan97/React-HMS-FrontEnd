@@ -2,7 +2,7 @@ export function ConfidenceBar({ confidence }) {
 
   return (
 
-    <div>
+    <div className="text-slate-900">
 
       <p className="font-medium mb-1">
         {confidence}%

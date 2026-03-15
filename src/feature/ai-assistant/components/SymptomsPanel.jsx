@@ -8,7 +8,7 @@ export function SymptomsPanel({
 
   return (
 
-    <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r p-4 sm:p-6 lg:p-8 space-y-4">
+    <div className="w-full md:w-1/2 border-b md:border-b-0 md:border-r p-4 sm:p-6 lg:p-8 space-y-4 text-slate-900">
 
       <p className="text-sm font-medium text-slate-900">
         Patient Symptoms

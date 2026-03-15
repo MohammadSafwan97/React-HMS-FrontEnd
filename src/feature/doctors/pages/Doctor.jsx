@@ -41,8 +41,9 @@ export function Doctors() {
       setLoading(true);
 
       const data = await getAllDoctors();
-
+console.log(data)
       setDoctors(data || []);
+      
 
     } catch (error) {
 
@@ -109,59 +110,60 @@ export function Doctors() {
 
   const validateDoctor = () => {
 
-    const name = String(formData.name || "").trim();
-    const specialization = String(formData.specialization || "").trim();
-    const phone = String(formData.phone || "").trim();
-    const email = String(formData.email || "").trim();
+  const name = String(formData.name || "").trim();
+  const specialization = String(formData.specialization || "").trim();
+  const phone = String(formData.phoneNo || "").trim(); // FIXED
+  const email = String(formData.email || "").trim();
 
-    if (!name) {
-      notifyError("Doctor name is required");
-      return false;
-    }
+  if (!name) {
+    notifyError("Doctor name is required");
+    return false;
+  }
 
-    if (!specialization) {
-      notifyError("Specialization is required");
-      return false;
-    }
+  if (!specialization) {
+    notifyError("Specialization is required");
+    return false;
+  }
 
-    if (!phone) {
-      notifyError("Phone number is required");
-      return false;
-    }
+  if (!phone) {
+    notifyError("Phone number is required");
+    return false;
+  }
 
-    const phoneRegex = /^[0-9]{10,15}$/;
+  const phoneRegex = /^[0-9]{10,15}$/;
 
-    if (!phoneRegex.test(phone)) {
-      notifyError("Enter a valid phone number");
-      return false;
-    }
+  if (!phoneRegex.test(phone)) {
+    notifyError("Enter a valid phone number");
+    return false;
+  }
 
-    if (!email) {
-      notifyError("Email is required");
-      return false;
-    }
+  if (!email) {
+    notifyError("Email is required");
+    return false;
+  }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailRegex.test(email)) {
-      notifyError("Enter a valid email address");
-      return false;
-    }
+  if (!emailRegex.test(email)) {
+    notifyError("Enter a valid email address");
+    return false;
+  }
 
-    const duplicate = doctors.find(
-      d =>
-        d.email?.toLowerCase() === email.toLowerCase() &&
-        d.id !== formData.id
-    );
+  const duplicate = doctors.find(
+    d =>
+      d.email?.toLowerCase() === email.toLowerCase() &&
+      d.id !== formData.id
+  );
 
-    if (duplicate) {
-      notifyError("Email already exists for another doctor");
-      return false;
-    }
+  if (duplicate) {
+    notifyError("Email already exists for another doctor");
+    return false;
+  }
 
-    return true;
+  return true;
 
-  };
+};
+
 
   /* ---------------- SAVE DOCTOR ---------------- */
 

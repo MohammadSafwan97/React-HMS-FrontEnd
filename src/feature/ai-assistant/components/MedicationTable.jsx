@@ -2,7 +2,7 @@ export function MedicationTable({ medications }) {
 
   return (
 
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto text-slate-900">
 
       <p className="text-slate-500 text-sm mb-2">
         Suggested Medication

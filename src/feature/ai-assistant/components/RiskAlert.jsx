@@ -3,7 +3,7 @@ export function RiskAlert({ riskLevel }) {
   if (riskLevel === "high") {
 
     return (
-      <div className="bg-red-100 text-red-700 rounded-lg p-3 text-xs font-medium">
+      <div className="bg-red-100 text-red-700 rounded-lg p-3 text-xs font-medium text-slate-900">
         ⚠ Immediate doctor attention recommended
       </div>
     );

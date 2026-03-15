@@ -170,6 +170,19 @@ export function SignupPage() {
 
           </form>
 
+          {/* Login Option */}
+
+          <div className="text-center mt-6 text-sm text-slate-600">
+            Already have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="text-blue-700 hover:underline font-medium"
+            >
+              Login
+            </button>
+          </div>
+
         </div>
 
       </div>

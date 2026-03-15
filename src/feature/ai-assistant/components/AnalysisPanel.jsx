@@ -7,10 +7,10 @@ export function AnalysisPanel({ analysis, loading }) {
 
   return (
 
-    <div className="w-full md:w-1/2 p-4 sm:p-6 lg:p-8 space-y-5">
+    <div className="w-full md:w-1/2 p-4 sm:p-6 lg:p-8 space-y-5 text-slate-900">
 
       {!analysis && !loading && (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-900">
           AI analysis will appear here after symptoms are analyzed.
         </p>
       )}
@@ -18,7 +18,7 @@ export function AnalysisPanel({ analysis, loading }) {
       {analysis && (
         <>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-slate-900">
 
             <div>
 
@@ -29,14 +29,14 @@ export function AnalysisPanel({ analysis, loading }) {
 
             <div>
 
-              <p className="text-slate-500">AI Confidence</p>
+              <p className="text-slate-900">AI Confidence</p>
               <ConfidenceBar confidence={analysis.confidence} />
 
             </div>
 
             <div>
 
-              <p className="text-slate-500">Risk Level</p>
+              <p className="text-slate-900">Risk Level</p>
               <RiskAlert riskLevel={analysis.riskLevel} />
 
             </div>
@@ -45,8 +45,8 @@ export function AnalysisPanel({ analysis, loading }) {
 
           <div>
 
-            <p className="text-slate-500 text-sm">Key Findings</p>
-            <p className="text-sm">
+            <p className="text-slate-900 text-sm">Key Findings</p>
+            <p className="text-sm text-slate-900">
               {analysis.findings.join(", ")}
             </p>
 
@@ -56,7 +56,7 @@ export function AnalysisPanel({ analysis, loading }) {
 
           <div>
 
-            <p className="text-slate-500 text-sm">
+            <p className="text-slate-800 text-sm">
               Doctor Instructions
             </p>
 
@@ -69,11 +69,11 @@ export function AnalysisPanel({ analysis, loading }) {
 
           <div>
 
-            <p className="text-slate-500 text-sm">
+            <p className="text-slate-900 text-sm">
               Medical Summary
             </p>
 
-            <p className="text-sm">
+            <p className="text-slate-900 text-sm">
               {analysis.summary}
             </p>
 

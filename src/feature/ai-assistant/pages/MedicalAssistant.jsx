@@ -45,6 +45,7 @@ export function MedicalAssistant() {
       <div className="flex flex-col md:flex-row">
 
         <SymptomsPanel
+        
           symptoms={symptoms}
           setSymptoms={setSymptoms}
           analyzeSymptoms={analyzeSymptoms}
@@ -53,6 +54,7 @@ export function MedicalAssistant() {
         />
 
         <AnalysisPanel
+        
           analysis={analysis}
           loading={loading}
         />

@@ -14,13 +14,43 @@ export function PrescriptionModal({
 
   const isView = mode === "view";
 
-  const patientOptions = patients.map(p => ({ label: p.name, value: p.id }));
-  const doctorOptions = doctors.map(d => ({ label: d.name, value: d.id }));
-  const appointmentOptions = appointments.map(a => ({ label: `Appointment ${a.id}`, value: a.id }));
+  /* ---------------- OPTIONS ---------------- */
 
-  const selectedPatient = patientOptions.find(p => p.value === form.patientId);
-  const selectedDoctor = doctorOptions.find(d => d.value === form.doctorId);
-  const selectedAppointment = appointmentOptions.find(a => a.value === form.appointmentId);
+  const appointmentOptions = appointments.map(a => {
+
+    const doctor = doctors.find(d => d.id === a.doctorId);
+    const patient = patients.find(p => p.id === a.patientId);
+
+    return {
+      value: a.id,
+      label: `#${a.id} — ${patient?.name || "Unknown"} with ${doctor?.name || "Doctor"}`
+    };
+
+  });
+
+  const selectedAppointment =
+    appointmentOptions.find(a => a.value === form.appointmentId);
+
+  const selectedDoctor =
+    doctors.find(d => d.id === form.doctorId);
+
+  const selectedPatient =
+    patients.find(p => p.id === form.patientId);
+
+  /* ---------------- HANDLE CHANGE ---------------- */
+
+  const handleAppointmentChange = (option) => {
+
+    const appointment = appointments.find(a => a.id === option.value);
+
+    setForm(prev => ({
+      ...prev,
+      appointmentId: appointment.id,
+      doctorId: appointment.doctorId,
+      patientId: appointment.patientId
+    }));
+
+  };
 
   const handleChange = (field,value)=>{
     setForm(prev=>({...prev,[field]:value}));
@@ -42,31 +72,7 @@ export function PrescriptionModal({
 
         <div className="grid grid-cols-2 gap-4">
 
-          <div>
-
-            <label>Patient</label>
-
-            <Select
-              value={selectedPatient}
-              options={patientOptions}
-              onChange={o=>handleChange("patientId",o.value)}
-              isDisabled={isView}
-            />
-
-          </div>
-
-          <div>
-
-            <label>Doctor</label>
-
-            <Select
-              value={selectedDoctor}
-              options={doctorOptions}
-              onChange={o=>handleChange("doctorId",o.value)}
-              isDisabled={isView}
-            />
-
-          </div>
+          {/* Appointment */}
 
           <div className="col-span-2">
 
@@ -75,11 +81,42 @@ export function PrescriptionModal({
             <Select
               value={selectedAppointment}
               options={appointmentOptions}
-              onChange={o=>handleChange("appointmentId",o.value)}
+              onChange={handleAppointmentChange}
               isDisabled={isView}
+              placeholder="Select appointment..."
             />
 
           </div>
+
+          {/* Patient (readonly) */}
+
+          <div>
+
+            <label>Patient</label>
+
+            <input
+              value={selectedPatient?.name || ""}
+              disabled
+              className="border p-2 rounded w-full bg-gray-100"
+            />
+
+          </div>
+
+          {/* Doctor (readonly) */}
+
+          <div>
+
+            <label>Doctor</label>
+
+            <input
+              value={selectedDoctor?.name || ""}
+              disabled
+              className="border p-2 rounded w-full bg-gray-100"
+            />
+
+          </div>
+
+          {/* Diagnosis */}
 
           <div className="col-span-2">
 

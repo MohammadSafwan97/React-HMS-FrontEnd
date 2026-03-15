@@ -51,7 +51,7 @@ export default function DoctorCard({ doctor, onEdit, onDelete }) {
       <div className="flex items-center gap-2 mt-3 text-sm">
 
         <Phone className="w-4 h-4" />
-        {doctor?.phone || "N/A"}
+        {doctor?.phoneNo || "N/A"}
 
       </div>
 
