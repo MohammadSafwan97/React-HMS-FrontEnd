@@ -35,7 +35,7 @@ export const updateDoctor = async (id, doctor) => {
 
   try {
 
-    const res = await apiClient.put(`"/doctors"/${id}`, doctor);
+    const res = await apiClient.put(`/doctors/${id}`, doctor);
     return res.data;
 
   } catch (error) {

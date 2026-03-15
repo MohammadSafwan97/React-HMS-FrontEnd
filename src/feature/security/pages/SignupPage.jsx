@@ -1,28 +1,47 @@
 import { useState } from "react";
 import { HeartPulse } from "lucide-react";
-import { Link } from "react-router";
-import { login } from "../services/authService";
+import { useNavigate } from "react-router";
+import { signup } from "../services/authService";
 
-export function LoginPage({ onLogin }) {
+export function SignupPage() {
 
+  const navigate = useNavigate();
+
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
 
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     try {
 
-      const user = await login(email, password);
+      await signup({
+        username,
+        email,
+        password,
+        role: "ADMIN",
+        active: true
+      });
 
-      onLogin(user);
+      setSuccess("Account created successfully. Redirecting to login...");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
 
     } catch (err) {
 
-      setError("Invalid username or password");
+      setError(
+        err.response?.data?.message ||
+        "Account creation failed. Please try again."
+      );
 
     }
 
@@ -30,13 +49,13 @@ export function LoginPage({ onLogin }) {
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-green-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-green-50 flex items-center justify-center p-4 text-slate-900">
 
       <div className="w-full max-w-md">
 
         <div className="bg-white rounded-2xl shadow-xl p-8">
 
-          {/* Hospital Logo */}
+          {/* Logo */}
 
           <div className="text-center mb-8">
 
@@ -52,20 +71,7 @@ export function LoginPage({ onLogin }) {
             </h1>
 
             <p className="text-slate-600 text-sm">
-              Hospital Management System
-            </p>
-
-          </div>
-
-          {/* Welcome Message */}
-
-          <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6">
-
-            <p className="text-slate-700 text-center text-sm">
-
-              Welcome back! Please sign in to access the
-              hospital management dashboard.
-
+              Create Staff Account
             </p>
 
           </div>
@@ -82,7 +88,19 @@ export function LoginPage({ onLogin }) {
 
           )}
 
-          {/* Login Form */}
+          {/* Success */}
+
+          {success && (
+
+            <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg p-3 mb-4">
+
+              {success}
+
+            </div>
+
+          )}
+
+          {/* Form */}
 
           <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -94,13 +112,29 @@ export function LoginPage({ onLogin }) {
 
               <input
                 type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter username"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 
+                rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-700"
+                required
+              />
+
+            </div>
+
+            <div>
+
+              <label className="block text-slate-700 mb-2">
+                Email
+              </label>
+
+              <input
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="username"
+                placeholder="doctor@hospital.com"
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 
-                rounded-lg text-slate-900 placeholder-slate-400
-                focus:outline-none focus:ring-2 focus:ring-blue-700 
-                focus:border-transparent transition-all"
+                rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-700"
                 required
               />
 
@@ -118,9 +152,7 @@ export function LoginPage({ onLogin }) {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 
-                rounded-lg text-slate-900
-                focus:outline-none focus:ring-2 focus:ring-blue-700 
-                focus:border-transparent transition-all"
+                rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-700"
                 required
               />
 
@@ -129,43 +161,14 @@ export function LoginPage({ onLogin }) {
             <button
               type="submit"
               className="w-full bg-gradient-to-r from-blue-700 to-teal-600 
-              text-white py-3 rounded-lg 
-              hover:shadow-lg hover:scale-[1.02] 
-              transition-all duration-200 mt-6"
+              text-white py-3 rounded-lg hover:shadow-lg transition"
             >
 
-              Sign In
+              Create Account
 
             </button>
 
           </form>
-
-          {/* Signup Option */}
-
-          <div className="mt-6 text-center">
-
-            <p className="text-sm text-slate-600">
-
-              Don't have an account?{" "}
-
-              <Link
-                to="/signup"
-                className="text-blue-700 font-semibold hover:underline"
-              >
-                Sign up
-              </Link>
-
-            </p>
-
-          </div>
-
-          {/* Footer */}
-
-          <p className="text-slate-400 text-center text-xs mt-6">
-
-            Secure Hospital Portal • Authorized Medical Staff Only
-
-          </p>
 
         </div>
 

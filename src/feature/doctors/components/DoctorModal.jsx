@@ -9,11 +9,34 @@ export default function DoctorModal({
   const fields = [
     ["name", "Doctor Name", "text"],
     ["email", "Email", "email"],
-    ["specialization", "Specialization", "text"],
-    ["department", "Department", "text"],
+    ["department", "Department", "select"],
+    ["specialization", "Specialization", "select"],
     ["experience", "Experience (Years)", "number"],
     ["phone", "Phone", "tel"],
   ];
+
+  const departments = [
+    "Cardiology",
+    "Neurology",
+    "Orthopedics",
+    "Pediatrics",
+    "Radiology",
+    "General Medicine",
+    "Emergency",
+  ];
+
+  const specializationMap = {
+    Cardiology: ["Cardiologist", "Cardiac Surgeon"],
+    Neurology: ["Neurologist", "Neuro Surgeon"],
+    Orthopedics: ["Orthopedic Surgeon", "Spine Specialist"],
+    Pediatrics: ["Pediatrician"],
+    Radiology: ["Radiologist"],
+    "General Medicine": ["General Physician"],
+    Emergency: ["Emergency Specialist"],
+  };
+
+  const specializations =
+    specializationMap[formData.department] || [];
 
   return (
 
@@ -35,14 +58,65 @@ export default function DoctorModal({
                 {label}
               </label>
 
-              <input
-                type={type}
-                required
-                name={name}
-                value={formData[name] || ""}
-                onChange={onChange}
-                className="border px-3 py-2 rounded-lg"
-              />
+              {type === "select" && name === "department" && (
+
+                <select
+                  required
+                  name={name}
+                  value={formData[name] || ""}
+                  onChange={onChange}
+                  className="border px-3 py-2 rounded-lg"
+                >
+                  <option value="">Select Department</option>
+
+                  {departments.map((dept) => (
+                    <option key={dept} value={dept}>
+                      {dept}
+                    </option>
+                  ))}
+
+                </select>
+
+              )}
+
+              {type === "select" && name === "specialization" && (
+
+                <select
+                  required
+                  name={name}
+                  value={formData[name] || ""}
+                  onChange={onChange}
+                  className="border px-3 py-2 rounded-lg"
+                  disabled={!formData.department}
+                >
+                  <option value="">
+                    {formData.department
+                      ? "Select Specialization"
+                      : "Select Department First"}
+                  </option>
+
+                  {specializations.map((spec) => (
+                    <option key={spec} value={spec}>
+                      {spec}
+                    </option>
+                  ))}
+
+                </select>
+
+              )}
+
+              {type !== "select" && (
+
+                <input
+                  type={type}
+                  required
+                  name={name}
+                  value={formData[name] || ""}
+                  onChange={onChange}
+                  className="border px-3 py-2 rounded-lg"
+                />
+
+              )}
 
             </div>
 
@@ -71,5 +145,6 @@ export default function DoctorModal({
       </div>
 
     </div>
+
   );
 }

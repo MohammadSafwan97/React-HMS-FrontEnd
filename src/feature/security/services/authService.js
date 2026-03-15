@@ -18,3 +18,13 @@ export const login = async (username, password) => {
   return response.data;
 
 };
+
+export const signup = async (payload) => {
+
+  const res = await axios.post(
+    `${import.meta.env.VITE_API_BASE_URL}/auth/signup`,
+    payload
+  );
+
+  return res.data;
+};

@@ -1,8 +1,11 @@
 import { Routes, Route, Navigate } from "react-router";
 
 import { ProtectedRoute } from "./ProtectedRoute";
+import { getDefaultRoute } from "./roleRoutes";
 
 import { LoginPage } from "../../feature/security/pages/LoginPage";
+import { SignupPage } from "../../feature/security/pages/SignupPage";
+
 import { DashboardLayout } from "../../shared/layout/DashboardLayout";
 
 import { MainDashboard } from "../../feature/dashboard/pages/MainDashboard";
@@ -12,20 +15,29 @@ import { Doctors } from "../../feature/doctors/pages/Doctor";
 import { MedicalRecords } from "../../feature/medicalrecords/Pages/MedicalRecords.jsx";
 import { User } from "../../feature/users/pages/User";
 import { Prescriptions } from "../../feature/prescriptions/pages/Prescriptions";
-import { MedicalAssistant } from "../../feature/ai-assistant/components/MedicalAssistant";
+import { MedicalAssistant } from "../../feature/ai-assistant/pages/MedicalAssistant";
 
 export function AppRoutes({ user, onLogin, onLogout }) {
 
   return (
     <Routes>
 
-      {/* LOGIN */}
+      {/* PUBLIC ROUTES */}
 
       <Route
         path="/login"
         element={
           !user
             ? <LoginPage onLogin={onLogin} />
+            : <Navigate to="/dashboard" replace />
+        }
+      />
+
+      <Route
+        path="/signup"
+        element={
+          !user
+            ? <SignupPage />
             : <Navigate to="/dashboard" replace />
         }
       />
@@ -47,16 +59,28 @@ export function AppRoutes({ user, onLogin, onLogout }) {
         />
 
         <Route path="dashboard" element={<MainDashboard />} />
+
         <Route path="appointments" element={<Appointments />} />
+
         <Route path="patients" element={<Patients />} />
+
         <Route path="doctors" element={<Doctors />} />
+
         <Route path="users" element={<User />} />
+
         <Route path="prescriptions" element={<Prescriptions />} />
+
         <Route path="medical-records" element={<MedicalRecords />} />
+
         <Route path="ai-assistant" element={<MedicalAssistant />} />
 
       </Route>
 
+      {/* FALLBACK ROUTE */}
+
+      <Route path="*" element={<Navigate to="/login" replace />} />
+
     </Routes>
   );
+
 }
