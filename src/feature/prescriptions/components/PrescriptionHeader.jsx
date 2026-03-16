@@ -4,15 +4,24 @@ export function PrescriptionHeader({ onAdd }) {
 
   return (
 
-    <div className="flex justify-between mb-6">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
 
-      <h1 className="text-2xl font-semibold">
+      <h1 className="text-lg sm:text-2xl font-semibold">
         Prescriptions
       </h1>
 
       <button
         onClick={onAdd}
-        className="flex gap-2 items-center bg-blue-900 text-white px-4 py-2 rounded"
+        className="
+          flex items-center justify-center gap-2
+          w-full sm:w-auto
+          bg-blue-900 text-white
+          px-4 py-2.5
+          rounded-lg
+          text-sm font-medium
+          hover:bg-blue-800
+          transition
+        "
       >
         <Plus size={16} />
         Add Prescription
