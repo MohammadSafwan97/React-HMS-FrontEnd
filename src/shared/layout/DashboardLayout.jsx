@@ -37,7 +37,7 @@ const NAV_SECTIONS = [
     title: "ADMINISTRATION",
     items: [
       { path: "/doctors", icon: Stethoscope, label: "Doctors" },
-      { path: "/users", icon: UserCog, label: "Users" },
+      // { path: "/users", icon: UserCog, label: "Users" },
     ],
   },
 ];

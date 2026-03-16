@@ -37,9 +37,7 @@ export default function DoctorCard({ doctor, onEdit, onDelete }) {
 
       <div className="text-sm mt-3 space-y-1">
 
-        <div>
-          Department: {doctor?.department || "N/A"}
-        </div>
+        
 
         <div>
           Experience: {doctor?.experience ?? 0} years

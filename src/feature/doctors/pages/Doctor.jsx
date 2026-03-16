@@ -32,6 +32,29 @@ export function Doctors() {
 
   const [loading, setLoading] = useState(true);
 
+  /* ---------------- SPECIALIZATION → DEPARTMENT MAP ---------------- */
+
+  const specializationToDepartment = {
+
+    Cardiologist: "Cardiology",
+    "Cardiac Surgeon": "Cardiology",
+
+    Neurologist: "Neurology",
+    "Neuro Surgeon": "Neurology",
+
+    "Orthopedic Surgeon": "Orthopedics",
+    "Spine Specialist": "Orthopedics",
+
+    Pediatrician: "Pediatrics",
+
+    Radiologist: "Radiology",
+
+    "General Physician": "General Medicine",
+
+    "Emergency Specialist": "Emergency",
+
+  };
+
   /* ---------------- LOAD DOCTORS ---------------- */
 
   const loadDoctors = async () => {
@@ -41,9 +64,8 @@ export function Doctors() {
       setLoading(true);
 
       const data = await getAllDoctors();
-console.log(data)
+
       setDoctors(data || []);
-      
 
     } catch (error) {
 
@@ -91,18 +113,29 @@ console.log(data)
 
   const openEdit = (doctor) => {
 
+    const department =
+      specializationToDepartment[doctor.specialization] || "";
+
     setMode("edit");
-    setFormData(doctor);
+
+    setFormData({
+      ...doctor,
+      department: department
+    });
+
     setShowModal(true);
 
   };
 
   const handleChange = (e) => {
 
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+      ...(name === "department" && { specialization: "" })
+    }));
 
   };
 
@@ -110,60 +143,59 @@ console.log(data)
 
   const validateDoctor = () => {
 
-  const name = String(formData.name || "").trim();
-  const specialization = String(formData.specialization || "").trim();
-  const phone = String(formData.phoneNo || "").trim(); // FIXED
-  const email = String(formData.email || "").trim();
+    const name = String(formData.name || "").trim();
+    const specialization = String(formData.specialization || "").trim();
+    const phone = String(formData.phoneNo || "").trim();
+    const email = String(formData.email || "").trim();
 
-  if (!name) {
-    notifyError("Doctor name is required");
-    return false;
-  }
+    if (!name) {
+      notifyError("Doctor name is required");
+      return false;
+    }
 
-  if (!specialization) {
-    notifyError("Specialization is required");
-    return false;
-  }
+    if (!specialization) {
+      notifyError("Specialization is required");
+      return false;
+    }
 
-  if (!phone) {
-    notifyError("Phone number is required");
-    return false;
-  }
+    if (!phone) {
+      notifyError("Phone number is required");
+      return false;
+    }
 
-  const phoneRegex = /^[0-9]{10,15}$/;
+    const phoneRegex = /^[0-9]{10,15}$/;
 
-  if (!phoneRegex.test(phone)) {
-    notifyError("Enter a valid phone number");
-    return false;
-  }
+    if (!phoneRegex.test(phone)) {
+      notifyError("Enter a valid phone number");
+      return false;
+    }
 
-  if (!email) {
-    notifyError("Email is required");
-    return false;
-  }
+    if (!email) {
+      notifyError("Email is required");
+      return false;
+    }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!emailRegex.test(email)) {
-    notifyError("Enter a valid email address");
-    return false;
-  }
+    if (!emailRegex.test(email)) {
+      notifyError("Enter a valid email address");
+      return false;
+    }
 
-  const duplicate = doctors.find(
-    d =>
-      d.email?.toLowerCase() === email.toLowerCase() &&
-      d.id !== formData.id
-  );
+    const duplicate = doctors.find(
+      d =>
+        d.email?.toLowerCase() === email.toLowerCase() &&
+        d.id !== formData.id
+    );
 
-  if (duplicate) {
-    notifyError("Email already exists for another doctor");
-    return false;
-  }
+    if (duplicate) {
+      notifyError("Email already exists for another doctor");
+      return false;
+    }
 
-  return true;
+    return true;
 
-};
-
+  };
 
   /* ---------------- SAVE DOCTOR ---------------- */
 

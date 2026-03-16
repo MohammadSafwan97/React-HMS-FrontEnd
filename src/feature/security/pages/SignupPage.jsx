@@ -60,7 +60,7 @@ export function SignupPage() {
           <div className="text-center mb-8">
 
             <div className="inline-flex items-center justify-center w-20 h-20 
-            bg-gradient-to-br from-blue-700 to-teal-600 rounded-full mb-4">
+            bg-gradient-to-br from-blue-700 to-blue-800 rounded-full mb-4">
 
               <HeartPulse className="w-10 h-10 text-white" />
 
@@ -160,7 +160,7 @@ export function SignupPage() {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-700 to-teal-600 
+              className="w-full bg-blue-800
               text-white py-3 rounded-lg hover:shadow-lg transition"
             >
 

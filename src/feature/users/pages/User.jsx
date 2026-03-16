@@ -77,9 +77,11 @@ export function User() {
 
     setFormData({
       id: null,
-      name: "",
+      username: "",
       email: "",
-      role: ""
+      password: "",
+      role: "",
+      active: true
     });
 
     setShowModal(true);
@@ -96,9 +98,10 @@ export function User() {
 
     setFormData({
       id: user.id,
-      name: user.username || "",
+      username: user.username || "",
       email: user.email || "",
-      role: user.role || ""
+      role: user.role || "",
+      active: user.active ?? true
     });
 
     setShowModal(true);
@@ -113,7 +116,9 @@ export function User() {
 
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: name === "active"
+        ? value === "true"
+        : value
     }));
 
   };

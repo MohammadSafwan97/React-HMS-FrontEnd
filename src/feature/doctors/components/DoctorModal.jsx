@@ -37,6 +37,7 @@ export default function DoctorModal({
 
   const specializations =
     specializationMap[formData.department] || [];
+    
 
   return (
 
