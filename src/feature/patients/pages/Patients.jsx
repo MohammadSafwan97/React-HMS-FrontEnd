@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getAllPatients, createPatient, updatePatient ,deletePatient} from "../services/patientService.js";
+import { getAllPatients, createPatient, updatePatient, deletePatient } from "../services/patientService.js";
 
 import PatientHeader from "../components/PatientHeader.jsx";
 import PatientSearch from "../components/PatientSearch.jsx";
@@ -34,29 +34,17 @@ export function Patients() {
   /* ---------------- LOAD PATIENTS ---------------- */
 
   const loadPatients = async () => {
-
     try {
-
       setLoading(true);
-
       const data = await getAllPatients();
-
       setPatients(data || []);
-
     } catch (err) {
-
       console.error("Failed to load patients:", err);
-
       notifyError(err?.message || "Failed to load patients");
-
       setError("Failed to load patients.");
-
     } finally {
-
       setLoading(false);
-
     }
-
   };
 
   useEffect(() => {
@@ -66,37 +54,27 @@ export function Patients() {
   /* ---------------- DELETE PATIENT ---------------- */
 
   const confirmDelete = async () => {
-
     const id = deletePatientId;
-
     if (!id) return;
 
     const previousPatients = [...patients];
 
     try {
-
       setPatients(prev => prev.filter(p => p.id !== id));
-
       setShowDeleteConfirm(false);
 
       await deletePatient(id);
 
       notifySuccess("Patient deleted successfully");
-
     } catch (err) {
-
       console.error("Delete failed:", err);
 
       setPatients(previousPatients);
 
       notifyError(err?.message || "Failed to delete patient");
-
     } finally {
-
       setDeletePatientId(null);
-
     }
-
   };
 
   /* ---------------- FILTERING ---------------- */
@@ -116,22 +94,10 @@ export function Patients() {
       patient.gender === genderFilter;
 
     const matchesSearch =
-
-      (patient.name || "")
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-
-      (patient.id || "")
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-
-      (patient.phoneNumber || "")
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-
-      (patient.email || "")
-        .toLowerCase()
-        .includes(search.toLowerCase());
+      (patient.name || "").toLowerCase().includes(search.toLowerCase()) ||
+      (patient.id || "").toLowerCase().includes(search.toLowerCase()) ||
+      (patient.phoneNumber || "").toLowerCase().includes(search.toLowerCase()) ||
+      (patient.email || "").toLowerCase().includes(search.toLowerCase());
 
     return (
       matchesTab &&
@@ -145,40 +111,30 @@ export function Patients() {
   /* ---------------- GROUPING FOR REPORT ---------------- */
 
   const grouped = {
-
     inpatient: patients.filter((p) => p.patientType === "INPATIENT"),
     outpatient: patients.filter((p) => p.patientType === "OUTPATIENT"),
     emergency: patients.filter((p) => p.patientType === "EMERGENCY"),
-
   };
 
   /* ---------------- HANDLERS ---------------- */
 
   const openAdd = () => {
-
     setMode("add");
     setFormData({});
     setShowModal(true);
-
   };
 
   const openEdit = (patient) => {
-
     setMode("edit");
     setFormData(patient);
     setShowModal(true);
-
   };
 
   const handleChange = (e) => {
-
     setFormData({
-
       ...formData,
       [e.target.name]: e.target.value,
-
     });
-
   };
 
   /* ---------------- VALIDATION ---------------- */
@@ -229,10 +185,7 @@ export function Patients() {
 
       if (mode === "edit") {
 
-        const updatedPatient = await updatePatient(
-          formData.id,
-          formData
-        );
+        const updatedPatient = await updatePatient(formData.id, formData);
 
         setPatients((prev) =>
           prev.map((p) =>
@@ -277,7 +230,7 @@ export function Patients() {
 
   return (
 
-    <div className="p-8 text-slate-900 space-y-10">
+    <div className="p-4 sm:p-6 lg:p-8 text-slate-900 space-y-6 sm:space-y-8">
 
       <PatientHeader
         onAdd={openAdd}
@@ -286,17 +239,17 @@ export function Patients() {
 
       {/* ---------------- TABS ---------------- */}
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
 
         {["INPATIENT", "OUTPATIENT", "EMERGENCY"].map((type) => (
 
           <button
             key={type}
             onClick={() => setActiveTab(type)}
-            className={`px-4 py-2 rounded-lg ${
+            className={`px-4 py-2 rounded-lg text-sm ${
               activeTab === type
                 ? "bg-blue-900 text-white"
-                : "border"
+                : "border border-slate-300"
             }`}
           >
             {type}
@@ -313,18 +266,17 @@ export function Patients() {
         onChange={setSearch}
       />
 
-      {/* ---------------- EXTRA FILTERS ---------------- */}
+      {/* ---------------- FILTERS ---------------- */}
 
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
 
         <select
           value={bloodFilter}
           onChange={(e) => setBloodFilter(e.target.value)}
-          className="border px-3 py-2 rounded-lg"
+          className="border border-slate-300 px-3 py-2 rounded-lg w-full sm:w-auto"
         >
 
           <option value="">All Blood Groups</option>
-
           <option value="A_POSITIVE">A+</option>
           <option value="A_NEGATIVE">A-</option>
           <option value="B_POSITIVE">B+</option>
@@ -339,11 +291,10 @@ export function Patients() {
         <select
           value={genderFilter}
           onChange={(e) => setGenderFilter(e.target.value)}
-          className="border px-3 py-2 rounded-lg"
+          className="border border-slate-300 px-3 py-2 rounded-lg w-full sm:w-auto"
         >
 
           <option value="">All Genders</option>
-
           <option value="MALE">Male</option>
           <option value="FEMALE">Female</option>
           <option value="OTHER">Other</option>
@@ -366,7 +317,7 @@ export function Patients() {
 
       {!loading && !error && (
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
 
           {filteredPatients.map((patient) => (
 
@@ -410,9 +361,9 @@ export function Patients() {
 
       {showDeleteConfirm && (
 
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 p-4">
 
-          <div className="bg-white rounded-xl p-6 w-[350px] space-y-4">
+          <div className="bg-white rounded-xl p-6 w-full max-w-sm space-y-4">
 
             <h3 className="text-lg font-semibold">
               Delete Patient
